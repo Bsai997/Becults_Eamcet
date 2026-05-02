@@ -28,6 +28,23 @@ app.use("/api/auth", authRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/admin", adminRoutes);
 
+
+// Serve frontend static files
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const frontendDistPath = path.resolve(__dirname, "../../frontend/dist");
+app.use(express.static(frontendDistPath));
+
+// Catch-all: serve index.html for non-API routes (SPA support)
+app.get("*", (req, res, next) => {
+  if (req.path.startsWith("/api")) return next();
+  res.sendFile(path.join(frontendDistPath, "index.html"));
+});
+
 app.use(errorHandler);
 
 export default app;
