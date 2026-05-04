@@ -8,6 +8,7 @@ import studentRoutes from "./routes/studentRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { config } from "./config.js";
+import studentPerformanceDetails from "./routes/studentPerformanceDetails.js";
 
 const app = express();
 
@@ -26,7 +27,9 @@ app.get("/health", (_req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/student", studentRoutes);
+
 app.use("/api/admin", adminRoutes);
+app.use("/api/admin/student-details", studentPerformanceDetails);
 
 
 // Serve frontend static files
