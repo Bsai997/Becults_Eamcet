@@ -19,10 +19,10 @@ export default function StudentPerformance() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Student Performance</h2>
+    <div className="max-w-5xl mx-auto p-2 sm:p-4 md:p-6">
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">Student Performance</h2>
       <input
-        className="mb-4 w-full p-2 border rounded"
+        className="mb-4 w-full p-2 border rounded text-sm sm:text-base"
         placeholder="Search by email or test name..."
         value={search}
         onChange={e => setSearch(e.target.value)}
@@ -31,28 +31,22 @@ export default function StudentPerformance() {
         <div>Loading...</div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full border">
+          <table className="min-w-full border text-xs sm:text-sm md:text-base">
             <thead>
               <tr className="bg-gray-100">
-                <th className="p-2 border">Email</th>
-                <th className="p-2 border">Test</th>
-                {/* <th className="p-2 border">Subject Scores</th> */}
-                <th className="p-2 border">Total Score</th>
-                <th className="p-2 border">Attempts</th>
+                <th className="p-2 border whitespace-nowrap">Email</th>
+                <th className="p-2 border whitespace-nowrap">Test</th>
+                <th className="p-2 border whitespace-nowrap">Total Score</th>
+                <th className="p-2 border whitespace-nowrap">Attempts</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((s, idx) => (
                 <tr key={idx} className="hover:bg-gray-50">
-                  <td className="p-2 border">{s.email}</td>
-                  <td className="p-2 border">{s.test_name}</td>
-                  {/* <td className="p-2 border">
-                    {Object.entries(s.subject_scores || {}).map(([sub, score]) => (
-                      <div key={sub}><b>{sub}:</b> {score}</div>
-                    ))}
-                  </td> */}
-                  <td className="p-2 border">{s.total_score}</td>
-                  <td className="p-2 border">{s.attempts}</td>
+                  <td className="p-2 border break-all max-w-[140px] sm:max-w-xs md:max-w-sm">{s.email}</td>
+                  <td className="p-2 border break-all max-w-[100px] sm:max-w-xs md:max-w-sm">{s.test_name}</td>
+                  <td className="p-2 border text-center">{s.total_score}</td>
+                  <td className="p-2 border text-center">{s.attempts}</td>
                 </tr>
               ))}
             </tbody>
