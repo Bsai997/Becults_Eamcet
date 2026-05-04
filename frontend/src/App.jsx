@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import StudentDashboard from "./pages/StudentDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import StudentPerformance from "./pages/StudentPerformance";
 import TestPage from "./pages/TestPage";
 import ResultPage from "./pages/ResultPage";
 import { useAuth } from "./context/AuthContext";
@@ -30,6 +31,14 @@ export default function App() {
         element={
           <ProtectedRoute role="admin">
             <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/student-performance"
+        element={
+          <ProtectedRoute role="admin">
+            <StudentPerformance />
           </ProtectedRoute>
         }
       />

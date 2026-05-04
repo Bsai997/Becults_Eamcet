@@ -117,7 +117,15 @@ export default function AdminDashboard() {
     <div className="mx-auto max-w-6xl p-6">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-3xl font-extrabold tracking-tight text-indigo-800 drop-shadow">BECULTS.EAMCET</h1>
-        <button onClick={logout} className="rounded bg-slate-800 px-4 py-2 text-white hover:bg-slate-900 transition">Logout</button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => window.location.href = "/admin/student-performance"}
+            className="rounded bg-blue-700 px-4 py-2 text-white hover:bg-blue-800 transition"
+          >
+            Student Performance
+          </button>
+          <button onClick={logout} className="rounded bg-slate-800 px-4 py-2 text-white hover:bg-slate-900 transition">Logout</button>
+        </div>
       </div>
       {error && (
         <div className="mb-4 rounded border border-red-400 bg-red-50 p-3 text-sm text-red-700 animate-pulse">
