@@ -13,10 +13,12 @@ export default function StudentPerformance() {
     });
   }, []);
 
-  const filtered = students.filter(s =>
-    s.email.toLowerCase().includes(search.toLowerCase()) ||
-    s.test_name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = students
+    .filter(s =>
+      s.email.toLowerCase().includes(search.toLowerCase()) ||
+      s.test_name.toLowerCase().includes(search.toLowerCase())
+    )
+    .sort((a, b) => (b.total_score || 0) - (a.total_score || 0));
 
   return (
     <div className="max-w-5xl mx-auto p-2 sm:p-4 md:p-6">
