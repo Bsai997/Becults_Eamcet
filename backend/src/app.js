@@ -6,6 +6,7 @@ import compression from "compression";
 import authRoutes from "./routes/authRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import collegeRoutes from "./routes/collegeRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { config } from "./config.js";
 import studentPerformanceDetails from "./routes/studentPerformanceDetails.js";
@@ -27,6 +28,7 @@ app.get("/health", (_req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/student", studentRoutes);
+app.use("/api/student", collegeRoutes);
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/admin/student-details", studentPerformanceDetails);

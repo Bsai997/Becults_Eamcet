@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TestCard from "../components/TestCard";
 import PerformanceCard from "../components/PerformanceCard";
+import PredictCollegeModal from "../components/PredictCollegeModal";
+import CollegeResultsTable from "../components/CollegeResultsTable";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../lib/api";
 
@@ -11,6 +13,9 @@ export default function StudentDashboard() {
   const [tests, setTests] = useState([]);
   const [performance, setPerformance] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showPredictModal, setShowPredictModal] = useState(false);
+  const [collegeResults, setCollegeResults] = useState(null);
+  const [resultsFilter, setResultsFilter] = useState(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -37,6 +42,19 @@ export default function StudentDashboard() {
     navigate(`/test/${test.id}/${response.data.attempt.id}`);
   };
 
+  const handlePredictResults = (data) => {
+    setCollegeResults(data.colleges);
+    setResultsFilter(data.filter);
+    setShowPredictModal(false);
+    // Store both above and below rank for the results component
+    window.collegeResultsData = {
+      colleges: data.colleges,
+      above_rank: data.above_rank,
+      below_rank: data.below_rank,
+      filter: data.filter,
+    };
+  };
+
   if (loading) return <div className="p-8">Loading dashboard...</div>;
 
   return (
@@ -48,12 +66,20 @@ export default function StudentDashboard() {
               <h1 className="text-2xl font-bold text-slate-900">BECULTS.EAMCET</h1>
               <p className="text-sm text-slate-600">{user?.email}</p>
             </div>
-            <button
-              onClick={logout}
-              className="self-start rounded-xl bg-slate-900 px-3 py-1.5 text-sm text-white hover:bg-slate-800 transition-colors sm:self-auto sm:px-4 sm:py-2 sm:text-base whitespace-nowrap"
-            >
-              Logout
-            </button>
+            <div className="flex gap-2 flex-col sm:flex-row">
+              <button
+                onClick={() => setShowPredictModal(true)}
+                className="rounded-xl bg-green-600 px-3 py-1.5 text-sm text-white hover:bg-green-700 transition-colors sm:px-4 sm:py-2 sm:text-base whitespace-nowrap font-semibold"
+              >
+                🎓 Predict Colleges
+              </button>
+              <button
+                onClick={logout}
+                className="self-start rounded-xl bg-slate-900 px-3 py-1.5 text-sm text-white hover:bg-slate-800 transition-colors sm:self-auto sm:px-4 sm:py-2 sm:text-base whitespace-nowrap"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
 
@@ -87,6 +113,27 @@ export default function StudentDashboard() {
           )}
         </div>
       </div>
+
+      {/* Modals */}
+      <PredictCollegeModal
+        isOpen={showPredictModal}
+        onClose={() => setShowPredictModal(false)}
+        onResults={handlePredictResults}
+      />
+
+      {collegeResults && (
+        <CollegeResultsTable
+          colleges={collegeResults}
+          filter={resultsFilter}
+          aboveRank={window.collegeResultsData?.above_rank || []}
+          belowRank={window.collegeResultsData?.below_rank || []}
+          onClose={() => {
+            setCollegeResults(null);
+            setResultsFilter(null);
+            window.collegeResultsData = null;
+          }}
+        />
+      )}
     </div>
   );
 }
