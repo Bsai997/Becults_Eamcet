@@ -24,31 +24,115 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
     });
 
   const handleDownloadPDF = () => {
-    const element = document.getElementById("colleges-table-pdf");
-    if (!element) {
-      alert("PDF content not found. Please try again.");
+    if (filteredColleges.length === 0) {
+      alert("No data to download. Please search first.");
       return;
     }
 
-    // Clone the element to avoid affecting the DOM
-    const clonedElement = element.cloneNode(true);
-    
+    // Create HTML content for PDF
+    const htmlContent = `
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>College Predictions</title>
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            .header { margin-bottom: 20px; border-bottom: 2px solid #2563eb; padding-bottom: 10px; }
+            .header h1 { font-size: 20px; color: #1e40af; margin-bottom: 5px; }
+            .filter-info { font-size: 12px; color: #666; margin: 5px 0; }
+            table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+            th { 
+              background-color: #dbeafe; 
+              padding: 8px; 
+              text-align: left; 
+              border: 1px solid #bfdbfe;
+              font-weight: bold;
+              font-size: 12px;
+            }
+            td { 
+              padding: 8px; 
+              border: 1px solid #e5e7eb;
+              font-size: 11px;
+            }
+            tr:nth-child(even) { background-color: #f9fafb; }
+            tr:nth-child(odd) { background-color: #ffffff; }
+            .rank { color: #2563eb; font-weight: bold; }
+            .footer { margin-top: 20px; font-size: 10px; color: #999; text-align: center; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>College Predictions Report</h1>
+            <div class="filter-info">
+              <strong>Rank:</strong> ${filter.rank} | 
+              <strong>Category:</strong> ${filter.caste} | 
+              <strong>Gender:</strong> ${filter.gender} | 
+              <strong>Total Colleges:</strong> ${filteredColleges.length}
+            </div>
+            <div class="filter-info">
+              <strong>Generated on:</strong> ${new Date().toLocaleString()}
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>College Name</th>
+                <th>Location</th>
+                <th>Branch</th>
+                <th>Cutoff Rank</th>
+                <th>Fee (₹)</th>
+                <th>Affiliation</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filteredColleges
+                .map(
+                  (college) => `
+                <tr>
+                  <td>${college.sno}</td>
+                  <td>${college.name}</td>
+                  <td>${college.place}</td>
+                  <td>${college.branch}</td>
+                  <td class="rank">${college.cutoff_rank.toLocaleString()}</td>
+                  <td>₹${college.college_fee ? college.college_fee.toLocaleString() : "N/A"}</td>
+                  <td>${college.affiliated}</td>
+                </tr>
+              `
+                )
+                .join("")}
+            </tbody>
+          </table>
+
+          <div class="footer">
+            <p>This is an auto-generated report from College Prediction System</p>
+          </div>
+        </body>
+      </html>
+    `;
+
+    // Create a temporary element
+    const element = document.createElement("div");
+    element.innerHTML = htmlContent;
+
     const opt = {
-      margin: [8, 8, 8, 8],
+      margin: [10, 10, 10, 10],
       filename: `College_Predictions_${new Date().toISOString().split("T")[0]}.pdf`,
-      image: { type: "jpeg", quality: 0.95 },
-      html2canvas: { scale: 2, useCORS: true, logging: false },
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true },
       jsPDF: { orientation: "landscape", unit: "mm", format: "a4" },
       pagebreak: { mode: ["avoid-all", "css", "legacy"] },
     };
 
     html2pdf()
       .set(opt)
-      .from(clonedElement)
+      .from(element.innerHTML)
       .save()
       .catch((error) => {
-        console.error("PDF generation failed:", error);
-        alert("Failed to generate PDF. Please try again.");
+        console.error("PDF generation error:", error);
+        alert("Failed to generate PDF. Please try again or contact support.");
       });
   };
 
