@@ -41,7 +41,15 @@ export default function ResultPage() {
 
   return (
     <div className="mx-auto max-w-4xl p-6">
-      <h1 className="text-2xl font-bold">Result</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Result</h1>
+        <button 
+          onClick={() => navigate("/student")} 
+          className="rounded bg-slate-800 px-4 py-2 text-white hover:bg-slate-700 transition-colors"
+        >
+          Back to Dashboard
+        </button>
+      </div>
       <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
         <div className="rounded-xl border bg-white p-4 shadow-sm">
           <p className="text-sm font-medium text-slate-500">Maths Score</p>
@@ -117,9 +125,6 @@ export default function ResultPage() {
           </div>
         ))}
       </div>
-      <button onClick={() => navigate("/student")} className="mt-6 rounded bg-slate-800 px-4 py-2 text-white">
-        Back to Dashboard
-      </button>
     </div>
   );
 }

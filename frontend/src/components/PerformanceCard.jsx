@@ -39,7 +39,7 @@ const PerformanceCard = React.memo(function PerformanceCard({ item, onView }) {
 
       <button
         onClick={() => onView(item)}
-        className="mt-4 w-full rounded-xl bg-slate-900 px-4 py-2 text-white font-medium hover:bg-slate-800 transition-colors"
+        className="mt-4 rounded-xl bg-slate-900 px-4 py-1.5 text-sm text-white font-medium hover:bg-slate-800 transition-colors"
       >
         View Detailed Result
       </button>

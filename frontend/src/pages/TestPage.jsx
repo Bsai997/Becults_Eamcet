@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import QuestionCard from "../components/QuestionCard";
 import Palette from "../components/Palette";
-import Timer from "../components/Timer";
 import { api } from "../lib/api";
 
 export default function TestPage() {
@@ -100,7 +99,9 @@ export default function TestPage() {
       <div>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-xl font-semibold">{testInfo.name} - Question {index + 1}</h2>
-          <Timer secondsLeft={secondsLeft} />
+          <div className="rounded bg-slate-900 px-4 py-2 text-white">
+            Time Left: {String(Math.floor(secondsLeft / 60)).padStart(2, "0")}:{String(secondsLeft % 60).padStart(2, "0")}
+          </div>
         </div>
         <QuestionCard
           question={currentQuestion}
