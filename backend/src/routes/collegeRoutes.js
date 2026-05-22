@@ -2,7 +2,7 @@ import express from "express";
 import { supabase } from "../db/supabase.js";
 import { ApiError } from "../utils/ApiError.js";
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * POST /api/student/predict-colleges

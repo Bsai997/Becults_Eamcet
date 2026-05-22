@@ -1,0 +1,54 @@
+{
+  "test_name": "EAMCET Mock Test 1",
+  "duration_minutes": 180,
+  "subjects": [
+    {
+      "name": "maths",
+      "questions": [
+        {
+          "question_text": "What is 2 + 2?",
+          "explanation": "2 + 2 equals 4.",
+          "options": [
+            { "option_text": "1", "is_correct": false },
+            { "option_text": "2", "is_correct": false },
+            { "option_text": "3", "is_correct": false },
+            { "option_text": "4", "is_correct": true }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "physics",
+      "questions": [
+        {
+          "question_text": "Unit of force is?",
+          "explanation": "Force is measured in Newton.",
+          "options": [
+            { "option_text": "Joule", "is_correct": false },
+            { "option_text": "Newton", "is_correct": true },
+            { "option_text": "Pascal", "is_correct": false },
+            { "option_text": "Watt", "is_correct": false }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "chemistry",
+      "questions": [
+        {
+          "question_text": "Which is an acid?",
+          "explanation": "HCl is an acid.",
+          "options": [
+            { "option_text": "NaOH", "is_correct": false },
+            { "option_text": "KOH", "is_correct": false },
+            { "option_text": "HCl", "is_correct": true },
+            { "option_text": "NaCl", "is_correct": false }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+
+

@@ -54,10 +54,12 @@ export default function ResultPage() {
         <div className="rounded-xl border bg-white p-4 shadow-sm">
           <p className="text-sm font-medium text-slate-500">Maths Score</p>
           <p className="mt-2 text-3xl font-bold text-blue-700">{result.maths_score}</p>
+          {/* <p className="mt-2 text-3xl font-bold text-blue-700">{result.maths_score}</p> */}
         </div>
         <div className="rounded-xl border bg-white p-4 shadow-sm">
           <p className="text-sm font-medium text-slate-500">Physics Score</p>
           <p className="mt-2 text-3xl font-bold text-violet-700">{result.physics_score}</p>
+          {/* <p className="mt-2 text-3xl font-bold text-violet-700">{result.physics_score}</p> */}
         </div>
         <div className="rounded-xl border bg-white p-4 shadow-sm">
           <p className="text-sm font-medium text-slate-500">Chemistry Score</p>
