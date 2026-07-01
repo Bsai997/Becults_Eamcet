@@ -66,39 +66,63 @@ router.post("/predict-colleges", async (req, res, next) => {
     }
 
     const columnName = `${casteLower}_${genderLower}`;
+    console.log("Query Parameters:", { rank, caste, gender, branch, columnName });
 
-    // Build base query
-    let baseQuery = supabase
-      .from("colleges")
-      .select(
-        "id,sno,instcode,name,type,place,dist,affiliated,established,branch_code,college_fee," +
-          columnName
-      )
-      .not(columnName, "is", null);
+    // Helper function to build base query
+    const buildBaseQuery = () => {
+      let query = supabase
+        .from("colleges")
+        .select(
+          "id,sno,instcode,name,type,place,dist,affiliated,established,branch_code,college_fee," +
+            columnName
+        )
+        .not(columnName, "is", null);
 
-    // Optional: filter by branch
-    if (branch && branch.trim()) {
-      baseQuery = baseQuery.eq("branch_code", branch.toUpperCase());
-    }
+      // Optional: filter by branch
+      if (branch && branch.trim()) {
+        query = query.eq("branch_code", branch.toUpperCase());
+      }
+      return query;
+    };
 
     // Get colleges ABOVE rank (cutoff >= student rank) - sorted ascending (lowest first)
-    const { data: aboveRankData, error: errorAbove } = await baseQuery
+    const { data: aboveRankData, error: errorAbove } = await buildBaseQuery()
       .gte(columnName, rank)
       .order(columnName, { ascending: true })
-      .limit(40);
+      .limit(30);
+
+    // console.log("Above rank query - Count:", aboveRankData?.length, "Error:", errorAbove);
 
     if (errorAbove) throw errorAbove;
 
     // Get colleges BELOW rank (cutoff < student rank) - sorted descending (highest first)
-    const { data: belowRankData, error: errorBelow } = await baseQuery
+    const { data: belowRankData, error: errorBelow } = await buildBaseQuery()
       .lt(columnName, rank)
       .order(columnName, { ascending: false })
-      .limit(40);
+      .limit(30);
+
+    // console.log("Below rank query - Count:", belowRankData?.length, "Error:", errorBelow);
 
     if (errorBelow) throw errorBelow;
 
-    // Format response
-    const formatCollege = (college) => ({
+    // If below rank has no results, get additional above rank colleges instead
+    let finalAboveRank = aboveRankData || [];
+    let finalBelowRank = belowRankData || [];
+
+    if (finalBelowRank.length === 0 && finalAboveRank.length < 60) {
+      // Get more above rank colleges if below rank is empty - rebuild query fresh
+      const { data: moreAbove, error: errorMoreAbove } = await buildBaseQuery()
+        .gte(columnName, rank)
+        .order(columnName, { ascending: true })
+        .limit(60);
+
+      if (!errorMoreAbove) {
+        finalAboveRank = moreAbove || [];
+        console.log("Adjusted: Getting more above rank colleges. Total:", finalAboveRank.length);
+      } else {
+        console.log("Adjusted query error:", errorMoreAbove);
+      }
+    }    const formatCollege = (college) => ({
       id: college.id,
       sno: college.sno,
       instcode: college.instcode,
@@ -113,8 +137,8 @@ router.post("/predict-colleges", async (req, res, next) => {
       cutoff_rank: college[columnName],
     });
 
-    const formattedAbove = (aboveRankData || []).map(formatCollege);
-    const formattedBelow = (belowRankData || []).map(formatCollege);
+    const formattedAbove = (finalAboveRank || []).map(formatCollege);
+    const formattedBelow = (finalBelowRank || []).map(formatCollege);
     const allColleges = [...formattedAbove, ...formattedBelow];
 
     res.json({

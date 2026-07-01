@@ -4,6 +4,11 @@ import html2pdf from "html2pdf.js";
 export default function CollegeResultsTable({ colleges, filter, onClose, aboveRank, belowRank }) {
   const [sortBy, setSortBy] = useState("cutoff_rank");
   const [filterPlace, setFilterPlace] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [name, setName] = useState("");
+  const [mobileNo, setMobileNo] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [formError, setFormError] = useState("");
 
   // Get unique places for filter
   const uniquePlaces = [...new Set(colleges.map((c) => c.place))].sort();
@@ -23,7 +28,58 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
       return 0;
     });
 
-  const handleDownloadPDF = () => {
+  const validateForm = () => {
+    setFormError("");
+    if (!name.trim()) {
+      setFormError("Name is required");
+      return false;
+    }
+    if (!mobileNo.trim()) {
+      setFormError("Mobile number is required");
+      return false;
+    }
+    if (!/^[0-9]{10}$/.test(mobileNo.trim())) {
+      setFormError("Mobile number must be 10 digits");
+      return false;
+    }
+    return true;
+  };
+
+  const saveTOGoogleSheet = async () => {
+    if (!validateForm()) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("http://localhost:5000/api/student/save-prediction-data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          mobileNo: mobileNo.trim(),
+          rank: filter.rank,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("API Response Error:", errorText);
+        throw new Error(`Failed to save data to Google Sheets: ${response.statusText}`);
+      }
+
+      // After successful submission, generate and download PDF
+      generateAndDownloadPDF();
+      setShowForm(false);
+      setName("");
+      setMobileNo("");
+    } catch (error) {
+      console.error("Error saving to Google Sheets:", error);
+      setFormError(error.message || "Failed to save data. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const generateAndDownloadPDF = () => {
     if (filteredColleges.length === 0) {
       alert("No data to download. Please search first.");
       return;
@@ -171,6 +227,8 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
           <div class="header">
             <h1>📊 College Predictions Report</h1>
             <div class="filter-section">
+              <div class="filter-item"><strong>Student Name:</strong> ${name}</div>
+              <div class="filter-item"><strong>Mobile No:</strong> ${mobileNo}</div>
               <div class="filter-item"><strong>Student Rank:</strong> ${filter.rank}</div>
               <div class="filter-item"><strong>Total Colleges:</strong> ${filteredColleges.length}</div>
               <div class="filter-item"><strong>Category:</strong> ${filter.caste}</div>
@@ -226,7 +284,7 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
 
     const opt = {
       margin: [10, 10, 10, 10],
-      filename: `College_Predictions_${new Date().toISOString().split("T")[0]}.pdf`,
+      filename: `College_Predictions_${name.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`,
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true },
       jsPDF: { orientation: "landscape", unit: "mm", format: "a4" },
@@ -243,8 +301,85 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
       });
   };
 
+  const handleDownloadPDF = () => {
+    if (filteredColleges.length === 0) {
+      alert("No data to download. Please search first.");
+      return;
+    }
+    // Show form instead of directly downloading
+    setShowForm(true);
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
+    <>
+      {/* Form Popup Modal */}
+      {showForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[999] p-4">
+          <div className="bg-white rounded-lg shadow-2xl w-full max-w-md p-6 sm:p-8">
+            <h3 className="text-2xl font-bold text-gray-800 mb-6">Download College List</h3>
+            <p className="text-gray-600 mb-6">Please enter your details to download the college predictions PDF</p>
+
+            {formError && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">{formError}</p>
+              </div>
+            )}
+
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter your full name"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Mobile Number *
+                </label>
+                <input
+                  type="tel"
+                  value={mobileNo}
+                  onChange={(e) => setMobileNo(e.target.value.replace(/[^0-9]/g, ""))}
+                  placeholder="Enter 10-digit mobile number"
+                  maxLength="10"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowForm(false);
+                  setFormError("");
+                  setName("");
+                  setMobileNo("");
+                }}
+                className="flex-1 px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 font-semibold transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveTOGoogleSheet}
+                disabled={isLoading}
+                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? "Processing..." : "Download PDF"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main Table Modal */}
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-7xl my-4 sm:my-8 max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="border-b px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-r from-blue-50 to-blue-100 sticky top-0">
@@ -411,5 +546,6 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
         </div>
       </div>
     </div>
+    </>
   );
 }

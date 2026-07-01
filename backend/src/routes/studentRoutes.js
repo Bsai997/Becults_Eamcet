@@ -284,4 +284,60 @@ router.get("/result/:attemptId", async (req, res, next) => {
   }
 });
 
+/**
+ * POST /api/student/save-prediction-data
+ * Save college prediction data to Google Sheets via Apps Script
+ */
+router.post("/save-prediction-data", async (req, res, next) => {
+  try {
+    const { name, mobileNo, rank } = req.body;
+
+    // Validate inputs
+    if (!name || !mobileNo || !rank) {
+      throw new ApiError(400, "Missing required fields: name, mobileNo, rank");
+    }
+
+    // Get Google Sheets Web App URL from environment
+    const googleSheetWebAppUrl = process.env.GOOGLE_SHEET_WEB_APP_URL;
+    
+    if (!googleSheetWebAppUrl) {
+      throw new ApiError(500, "Google Sheets integration not configured");
+    }
+
+    // Prepare data
+    const payload = {
+      name: String(name).trim(),
+      mobileNo: String(mobileNo).trim(),
+      rank: String(rank).trim(),
+    };
+
+    // console.log("Sending to Google Apps Script:", payload);
+    // console.log("URL:", googleSheetWebAppUrl);
+
+    // Send to Google Apps Script Web App
+    const response = await fetch(googleSheetWebAppUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    // console.log("Response Status:", response.status);
+    const responseText = await response.text();
+    // console.log("Response Text:", responseText);
+
+    if (!response.ok) {
+      // console.error("Google Apps Script Error:", response.status, responseText);
+      throw new ApiError(500, `Google Sheets error (${response.status}): ${responseText}`);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Data saved successfully to Google Sheets",
+    });
+  } catch (error) {
+    // console.error("Save prediction data error:", error.message);
+    next(error);
+  }
+});
+
 export default router;

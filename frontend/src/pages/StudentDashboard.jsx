@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TestCard from "../components/TestCard";
-import PerformanceCard from "../components/PerformanceCard";
 import PredictCollegeModal from "../components/PredictCollegeModal";
 import CollegeResultsTable from "../components/CollegeResultsTable";
 import { useAuth } from "../context/AuthContext";
@@ -11,26 +10,35 @@ export default function StudentDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [tests, setTests] = useState([]);
-  const [performance, setPerformance] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showPredictModal, setShowPredictModal] = useState(false);
   const [collegeResults, setCollegeResults] = useState(null);
   const [resultsFilter, setResultsFilter] = useState(null);
 
   const fetchData = async () => {
-    setLoading(true);
-    const [testsResponse, perfResponse] = await Promise.all([
-      api.get("/student/tests", { params: { userId: user.id } }),
-      api.get("/student/performance", { params: { userId: user.id } }),
-    ]);
-    setTests(testsResponse.data);
-    setPerformance(perfResponse.data);
-    setLoading(false);
+    try {
+      setLoading(true);
+      // Only fetch if user exists
+      if (!user?.id) {
+        console.log("No user, skipping data fetch");
+        setTests([]);
+        setLoading(false);
+        return;
+      }
+
+      const testsResponse = await api.get("/student/tests", { params: { userId: user.id } });
+      setTests(testsResponse.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setTests([]);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [user?.id]);
 
   const handleAction = async (test, actionLabel) => {
     const mode = actionLabel === "Resume Test" ? "resume" : "new";
@@ -58,32 +66,30 @@ export default function StudentDashboard() {
   if (loading) return <div className="p-8">Loading dashboard...</div>;
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="mb-6 rounded-2xl bg-white p-5 shadow-sm">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900">BECULTS.EAMCET</h1>
-              <p className="text-sm text-slate-600">{user?.email}</p>
-            </div>
-            <div className="flex gap-2 flex-col sm:flex-row">
-              <button
-                onClick={() => setShowPredictModal(true)}
-                className="rounded-xl bg-green-600 px-3 py-1.5 text-sm text-white hover:bg-green-700 transition-colors sm:px-4 sm:py-2 sm:text-base whitespace-nowrap font-semibold"
-              >
-                🎓 Predict Colleges
-              </button>
-              <button
-                onClick={logout}
-                className="self-start rounded-xl bg-slate-900 px-3 py-1.5 text-sm text-white hover:bg-slate-800 transition-colors sm:self-auto sm:px-4 sm:py-2 sm:text-base whitespace-nowrap"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
+    <div className="min-h-screen bg-slate-50">
+      {/* Header Section */}
+      <div className="bg-gradient-to-r from-green-700 to-green-900 text-white py-12">
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <h1 className="text-5xl font-bold mb-2">BECULTS</h1>
+          <h2 className="text-2xl font-semibold mb-3">Eamcet Mock Test Platform</h2>
+          <p className="text-lg text-green-100">Grow your career from here</p>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Predict Colleges Button - Right Side */}
+        <div className="flex justify-end mb-8">
+          <button
+            onClick={() => setShowPredictModal(true)}
+            className="rounded-xl bg-green-600 px-6 py-3 text-white hover:bg-green-700 transition-colors font-semibold shadow-md hover:shadow-lg"
+          >
+            🎓 Predict Colleges
+          </button>
         </div>
 
-        <div className="mb-8 rounded-2xl bg-white p-5 shadow-sm">
+        {/* Tests Section */}
+        <div className="rounded-2xl bg-white p-5 shadow-sm">
           <h2 className="mb-4 text-xl font-semibold text-slate-900">Tests</h2>
           {tests.length === 0 ? (
             <p className="text-sm text-slate-600">No tests available.</p>
@@ -91,23 +97,6 @@ export default function StudentDashboard() {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {tests.map((test) => (
                 <TestCard key={test.id} test={test} onAction={handleAction} />
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <h2 className="mb-4 text-xl font-semibold text-slate-900">Performance</h2>
-          {performance.length === 0 ? (
-            <p className="text-sm text-slate-600">No completed attempts yet.</p>
-          ) : (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {performance.map((entry) => (
-                <PerformanceCard
-                  key={entry.attempt_id}
-                  item={entry}
-                  onView={() => navigate(`/result/${entry.attempt_id}`)}
-                />
               ))}
             </div>
           )}
