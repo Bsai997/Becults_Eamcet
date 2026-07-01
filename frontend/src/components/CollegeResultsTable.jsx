@@ -34,71 +34,178 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
       <html>
         <head>
           <meta charset="UTF-8">
-          <title>College Predictions</title>
+          <title>College Predictions Report</title>
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            .header { margin-bottom: 20px; border-bottom: 2px solid #2563eb; padding-bottom: 10px; }
-            .header h1 { font-size: 20px; color: #1e40af; margin-bottom: 5px; }
-            .filter-info { font-size: 12px; color: #666; margin: 5px 0; }
-            table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-            th { 
-              background-color: #dbeafe; 
-              padding: 8px; 
-              text-align: left; 
-              border: 1px solid #bfdbfe;
-              font-weight: bold;
+            html, body { 
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+              color: #333;
+              background: white;
+            }
+            body { padding: 30px 20px; }
+            
+            .header { 
+              margin-bottom: 30px; 
+              padding-bottom: 20px;
+              border-bottom: 3px solid #1e40af;
+            }
+            .header h1 { 
+              font-size: 24px; 
+              color: #1e40af; 
+              margin-bottom: 12px;
+              font-weight: 700;
+            }
+            .header p {
+              font-size: 13px;
+              color: #555;
+              line-height: 1.6;
+              margin: 5px 0;
+            }
+            
+            .filter-section {
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 15px;
+              margin-top: 12px;
+              padding-top: 12px;
+              border-top: 1px solid #e5e7eb;
+            }
+            
+            .filter-item {
               font-size: 12px;
+              color: #666;
             }
+            
+            .filter-item strong {
+              color: #1e40af;
+              font-weight: 600;
+            }
+            
+            table { 
+              width: 100%; 
+              border-collapse: collapse;
+              margin-top: 20px;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            }
+            
+            th { 
+              background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+              color: white;
+              padding: 12px 10px;
+              text-align: left;
+              font-weight: 600;
+              font-size: 12px;
+              border: 1px solid #1e40af;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+            }
+            
             td { 
-              padding: 8px; 
-              border: 1px solid #e5e7eb;
+              padding: 11px 10px;
+              border: 1px solid #d1d5db;
               font-size: 11px;
+              color: #374151;
             }
-            tr:nth-child(even) { background-color: #f9fafb; }
-            tr:nth-child(odd) { background-color: #ffffff; }
-            .rank { color: #2563eb; font-weight: bold; }
-            .footer { margin-top: 20px; font-size: 10px; color: #999; text-align: center; }
+            
+            tr:nth-child(even) td { 
+              background-color: #f3f4f6;
+            }
+            
+            tr:nth-child(odd) td { 
+              background-color: #ffffff;
+            }
+            
+            tbody tr:hover td {
+              background-color: #eff6ff;
+            }
+            
+            .sno { 
+              text-align: center;
+              font-weight: 600;
+              color: #1e40af;
+              width: 40px;
+            }
+            
+            .rank { 
+              color: #1e40af; 
+              font-weight: 600;
+              text-align: center;
+            }
+            
+            .fee {
+              text-align: right;
+              font-weight: 500;
+            }
+            
+            .college-name {
+              font-weight: 600;
+              color: #1f2937;
+            }
+            
+            .location, .branch, .affiliation {
+              color: #555;
+            }
+            
+            .footer { 
+              margin-top: 30px; 
+              padding-top: 15px;
+              font-size: 10px; 
+              color: #999; 
+              text-align: center;
+              border-top: 1px solid #d1d5db;
+            }
+            
+            @page {
+              size: A4 landscape;
+              margin: 15mm;
+            }
+            
+            @media print {
+              body { padding: 0; }
+              table { page-break-inside: avoid; }
+              tr { page-break-inside: avoid; }
+            }
           </style>
         </head>
         <body>
           <div class="header">
-            <h1>College Predictions Report</h1>
-            <div class="filter-info">
-              <strong>Rank:</strong> ${filter.rank} | 
-              <strong>Category:</strong> ${filter.caste} | 
-              <strong>Gender:</strong> ${filter.gender} | 
-              <strong>Total Colleges:</strong> ${filteredColleges.length}
+            <h1>📊 College Predictions Report</h1>
+            <div class="filter-section">
+              <div class="filter-item"><strong>Student Rank:</strong> ${filter.rank}</div>
+              <div class="filter-item"><strong>Total Colleges:</strong> ${filteredColleges.length}</div>
+              <div class="filter-item"><strong>Category:</strong> ${filter.caste}</div>
+              <div class="filter-item"><strong>Gender:</strong> ${filter.gender}</div>
             </div>
-            <div class="filter-info">
-              <strong>Generated on:</strong> ${new Date().toLocaleString()}
-            </div>
+            <p style="margin-top: 12px; font-size: 11px; color: #666;">
+              <strong>Generated:</strong> ${new Date().toLocaleString()} | 
+              <strong>Platform:</strong> EAMCET College Prediction System
+            </p>
           </div>
 
           <table>
             <thead>
               <tr>
-                <th>S.No</th>
+                <th class="sno">S.No</th>
                 <th>College Name</th>
                 <th>Location</th>
                 <th>Branch</th>
-                <th>Cutoff Rank</th>
-                <th>Fee (₹)</th>
+                <th style="text-align: center;">Cutoff Rank</th>
+                <th style="text-align: right;">Fee (₹)</th>
                 <th>Affiliation</th>
               </tr>
             </thead>
             <tbody>
               ${filteredColleges
                 .map(
-                  (college) => `
+                  (college, idx) => `
                 <tr>
-                  <td>${college.sno}</td>
-                  <td>${college.name}</td>
-                  <td>${college.place}</td>
-                  <td>${college.branch}</td>
-                  <td class="rank">${college.cutoff_rank.toLocaleString()}</td>
-                  <td>₹${college.college_fee ? college.college_fee.toLocaleString() : "N/A"}</td>
-                  <td>${college.affiliated}</td>
+                  <td class="sno">${idx + 1}</td>
+                  <td class="college-name">${college.name || 'N/A'}</td>
+                  <td class="location">${college.place || 'N/A'}</td>
+                  <td class="branch">${college.branch || 'N/A'}</td>
+                  <td class="rank">${college.cutoff_rank ? college.cutoff_rank.toLocaleString() : 'N/A'}</td>
+                  <td class="fee">₹${college.college_fee ? college.college_fee.toLocaleString() : 'N/A'}</td>
+                  <td class="affiliation">${college.affiliated || 'N/A'}</td>
                 </tr>
               `
                 )
@@ -107,7 +214,7 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
           </table>
 
           <div class="footer">
-            <p>This is an auto-generated report from College Prediction System</p>
+            <p>This is an auto-generated report from the EAMCET College Prediction Platform. For official information, visit the respective college websites.</p>
           </div>
         </body>
       </html>
@@ -203,7 +310,7 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
             onClick={handleDownloadPDF}
             className="px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold text-xs sm:text-sm transition whitespace-nowrap"
           >
-            📥 PDF
+            Download as PDF
           </button>
         </div>
 
@@ -242,7 +349,7 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
                         idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                       }`}
                     >
-                      <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-600 font-semibold text-xs sm:text-sm">{college.sno}</td>
+                      <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-600 font-semibold text-xs sm:text-sm text-center">{idx + 1}</td>
                       <td className="px-3 py-2 sm:px-4 sm:py-3 font-semibold text-gray-800 text-xs sm:text-sm">{college.name}</td>
                       <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-700 text-xs sm:text-sm">{college.place}</td>
                       <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-700 font-semibold text-xs sm:text-sm">{college.branch}</td>
@@ -278,7 +385,7 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
                 <div className="font-bold text-sm text-gray-800 mb-2">{college.name}</div>
                 <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
                   <div>
-                    <span className="font-semibold text-gray-700">S.No:</span> {college.sno}
+                    <span className="font-semibold text-gray-700">S.No:</span> {idx + 1}
                   </div>
                   <div>
                     <span className="font-semibold text-gray-700">Branch:</span> {college.branch}
