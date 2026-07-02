@@ -1,4 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/LoginPage";
 import StudentDashboard from "./pages/StudentDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import StudentPerformance from "./pages/StudentPerformance";
@@ -16,8 +18,21 @@ const ProtectedRoute = ({ role, children }) => {
 export default function App() {
   return (
     <Routes>
-      {/* Default route - always shows StudentDashboard */}
-      <Route path="/" element={<StudentDashboard />} />
+      {/* Landing Page - Public */}
+      <Route path="/" element={<LandingPage />} />
+      
+      {/* Login Page - Public */}
+      <Route path="/login" element={<LoginPage />} />
+      
+      {/* Student Dashboard - Protected */}
+      <Route
+        path="/student"
+        element={
+          <ProtectedRoute role="student">
+            <StudentDashboard />
+          </ProtectedRoute>
+        }
+      />
       
       {/* Protected routes */}
       <Route
