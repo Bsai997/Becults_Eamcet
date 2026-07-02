@@ -33,7 +33,7 @@ export default function FeaturesSection() {
   return (
     <div className="py-16 px-4 bg-gray-50">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-12 text-gray-900">
+        <h2 className="text-4xl font-extrabold text-center mb-12 text-gray-900">
           Our Features
         </h2>
 
@@ -48,7 +48,7 @@ export default function FeaturesSection() {
                 <div className="flex justify-center mb-4">
                   <IconComponent size={48} className="text-green-600" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                <h3 className="text-xl font-extrabold text-gray-900 mb-3">
                   {feature.title}
                 </h3>
                 <p className="text-gray-600">

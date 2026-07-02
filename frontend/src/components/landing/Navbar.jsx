@@ -9,24 +9,24 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 bg-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
-        <div className="text-2xl font-bold text-green-600">BECULTS.
+        <div className="text-2xl font-extrabold text-green-600">BECULTS.
             <span style={{color:'black'}}>EAMCET</span></div>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex gap-6">
           <button
             onClick={() => navigate('/login')}
-            className="px-4 py-2 text-gray-700 hover:text-green-600 font-medium transition"
+            className="px-4 py-2 text-gray-700 hover:text-green-600 font-bold transition"
           >
             Login
           </button>
           <button
-            className="px-4 py-2 text-gray-700 hover:text-green-600 font-medium transition"
+            className="px-4 py-2 text-gray-700 hover:text-green-600 font-bold transition"
           >
             Pricing
           </button>
           <button
-            className="px-4 py-2 text-gray-700 hover:text-green-600 font-medium transition"
+            className="px-4 py-2 text-gray-700 hover:text-green-600 font-bold transition"
           >
             Features
           </button>
@@ -49,14 +49,14 @@ export default function Navbar() {
               navigate('/login');
               setIsMenuOpen(false);
             }}
-            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-50"
+            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-50 font-bold"
           >
             Login
           </button>
-          <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-50">
+          <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-50 font-bold">
             Pricing
           </button>
-          <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-50">
+          <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-50 font-bold">
             Features
           </button>
         </div>

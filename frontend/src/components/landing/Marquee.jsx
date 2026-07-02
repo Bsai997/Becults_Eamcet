@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Marquee() {
   const quotes = [
-    "� Full length mock test and analysis",
+    "🎯 Full length mock test and analysis",
     "💻 Chapter wise test with explanation",
     "⭐ Real reviews by btech student",
     "🎯 Predict your dream college",

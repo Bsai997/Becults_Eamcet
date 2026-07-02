@@ -88,7 +88,7 @@ export default function MiniMockTest() {
       <div className="py-16 px-4 bg-gradient-to-b from-green-50 to-blue-50">
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-xl p-8 shadow-lg text-center">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">Test Complete!</h2>
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-6">Test Complete!</h2>
 
             {/* Score Card */}
             <div className="bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-xl p-8 mb-8">
@@ -123,7 +123,7 @@ export default function MiniMockTest() {
               </button>
             ) : (
               <div className="mt-8 text-left">
-                <h3 className="text-2xl font-bold mb-6 text-gray-900">Answer Review</h3>
+                <h3 className="text-2xl font-extrabold mb-6 text-gray-900">Answer Review</h3>
                 {questions.map((q, idx) => (
                   <div key={idx} className="mb-6 p-4 border-2 border-gray-200 rounded-lg">
                     <p className="font-bold text-gray-900 mb-2">Question {idx + 1}: {q.question}</p>
@@ -159,7 +159,7 @@ export default function MiniMockTest() {
     <div className="py-16 px-4 bg-gradient-to-b from-white to-blue-50">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-xl p-8 shadow-lg">
-          <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
+          <h2 className="text-3xl font-extrabold text-center mb-8 text-gray-900">
             Mini Mock Test
           </h2>
 
@@ -184,7 +184,7 @@ export default function MiniMockTest() {
           </div>
 
           {/* Question */}
-          <h3 className="text-xl font-bold text-gray-900 mb-6">{q.question}</h3>
+          <h3 className="text-xl font-extrabold text-gray-900 mb-6">{q.question}</h3>
 
           {/* Options */}
           <div className="space-y-3 mb-8">

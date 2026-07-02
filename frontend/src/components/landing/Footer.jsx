@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* About */}
           <div>
-            <h3 className="text-2xl font-bold mb-4 text-green-400">BECULTS</h3>
+            <h3 className="text-2xl font-extrabold mb-4 text-green-400">BECULTS</h3>
             <p className="text-gray-400">
               Your one-stop platform for EAMCET preparation with mock tests, chapter-wise practice, and accurate college predictions.
             </p>
@@ -18,7 +18,7 @@ export default function Footer() {
 
           {/* Contact Us */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Contact Us</h3>
+            <h3 className="text-xl font-extrabold mb-4">Contact Us</h3>
             <p className="text-gray-400 mb-4 flex items-center gap-2">
               <Mail size={20} strokeWidth={1.5} /> <a href="mailto:becults.lfib@gmail.com" className="text-green-400 hover:text-green-300">becults.lfib@gmail.com</a>
             </p>
@@ -26,7 +26,7 @@ export default function Footer() {
 
           {/* Follow Us */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Follow Us</h3>
+            <h3 className="text-xl font-extrabold mb-4">Follow Us</h3>
             <div className="flex gap-4">
               <a 
                 href="https://www.instagram.com/becults/" 
