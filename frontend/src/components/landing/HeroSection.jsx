@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PredictCollegeModal from '../PredictCollegeModal';
+import CollegeResultsTable from '../CollegeResultsTable';
 
 export default function HeroSection() {
   const navigate = useNavigate();
   const [showPredictModal, setShowPredictModal] = useState(false);
+  const [collegeResults, setCollegeResults] = useState(null);
+  const [resultsFilter, setResultsFilter] = useState(null);
+  const [resultsData, setResultsData] = useState(null);
 
   const handleStartTest = () => {
     navigate('/login');
@@ -12,6 +16,13 @@ export default function HeroSection() {
 
   const handleCollegeReviews = () => {
     window.open('https://becults-colleges-review.vercel.app/', '_blank');
+  };
+
+  const handlePredictResults = (data) => {
+    setCollegeResults(data.colleges);
+    setResultsFilter(data.filter);
+    setResultsData(data);
+    setShowPredictModal(false);
   };
 
   return (
@@ -66,11 +77,23 @@ export default function HeroSection() {
       <PredictCollegeModal 
         isOpen={showPredictModal} 
         onClose={() => setShowPredictModal(false)}
-        onResults={(results) => {
-          console.log('College predictions:', results);
-          // Handle results as needed
-        }}
+        onResults={handlePredictResults}
       />
+
+      {/* College Results Table - Reused from StudentDashboard */}
+      {collegeResults && resultsData && (
+        <CollegeResultsTable
+          colleges={collegeResults}
+          filter={resultsFilter}
+          aboveRank={resultsData.above_rank || []}
+          belowRank={resultsData.below_rank || []}
+          onClose={() => {
+            setCollegeResults(null);
+            setResultsFilter(null);
+            setResultsData(null);
+          }}
+        />
+      )}
     </>
   );
 }

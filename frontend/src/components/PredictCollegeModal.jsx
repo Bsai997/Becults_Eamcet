@@ -51,7 +51,20 @@ export default function PredictCollegeModal({ isOpen, onClose, onResults }) {
         branch: branch || undefined,
       });
 
-      onResults(response.data);
+      // Pass colleges, filter info, and both above_rank and below_rank arrays
+      onResults({
+        colleges: response.data.colleges,
+        above_rank: response.data.above_rank || [],
+        below_rank: response.data.below_rank || [],
+        filter: {
+          rank: parseInt(rank),
+          caste,
+          gender,
+          branch: branch || "All Branches",
+        },
+      });
+      
+      // Reset form
       setRank("");
       setCaste("OC");
       setGender("BOYS");
