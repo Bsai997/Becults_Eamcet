@@ -13,20 +13,31 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
   // Get unique places for filter
   const uniquePlaces = [...new Set(colleges.map((c) => c.place))].sort();
 
-  // Combine and filter colleges
+  // Combine all colleges
   const allColleges = [...(aboveRank || []), ...(belowRank || [])];
-  const filteredColleges = allColleges
-    .filter((c) => !filterPlace || c.place === filterPlace)
-    .sort((a, b) => {
-      if (sortBy === "cutoff_rank") {
-        return a.cutoff_rank - b.cutoff_rank;
-      } else if (sortBy === "college_fee") {
-        return a.college_fee - b.college_fee;
-      } else if (sortBy === "name") {
-        return a.name.localeCompare(b.name);
-      }
-      return 0;
-    });
+  
+  // Separate colleges into High Chances and Less Chances
+  const highChancesColleges = allColleges.filter(c => filter.rank <= c.cutoff_rank);
+  const lessChancesColleges = allColleges.filter(c => filter.rank > c.cutoff_rank);
+  
+  // Apply filtering and sorting to both categories
+  const getFilteredAndSorted = (collegesList) => {
+    return collegesList
+      .filter((c) => !filterPlace || c.place === filterPlace)
+      .sort((a, b) => {
+        if (sortBy === "cutoff_rank") {
+          return a.cutoff_rank - b.cutoff_rank;
+        } else if (sortBy === "college_fee") {
+          return a.college_fee - b.college_fee;
+        } else if (sortBy === "name") {
+          return a.name.localeCompare(b.name);
+        }
+        return 0;
+      });
+  };
+  
+  const filteredHighChances = getFilteredAndSorted(highChancesColleges);
+  const filteredLessChances = getFilteredAndSorted(lessChancesColleges);
 
   const validateForm = () => {
     setFormError("");
@@ -81,7 +92,7 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
   };
 
   const generateAndDownloadPDF = () => {
-    if (filteredColleges.length === 0) {
+    if (filteredHighChances.length === 0 && filteredLessChances.length === 0) {
       alert("No data to download. Please search first.");
       return;
     }
@@ -254,11 +265,26 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
               </tr>
             </thead>
             <tbody>
-              ${filteredColleges
+              ${filteredHighChances
                 .map(
                   (college, idx) => `
                 <tr>
                   <td class="sno">${idx + 1}</td>
+                  <td class="college-name">${college.name || 'N/A'}</td>
+                  <td class="location">${college.place || 'N/A'}</td>
+                  <td class="branch">${college.branch || 'N/A'}</td>
+                  <td class="rank">${college.cutoff_rank ? college.cutoff_rank.toLocaleString() : 'N/A'}</td>
+                  <td class="fee">₹${college.college_fee ? college.college_fee.toLocaleString() : 'N/A'}</td>
+                  <td class="affiliation">${college.affiliated || 'N/A'}</td>
+                </tr>
+              `
+                )
+                .join("")}
+              ${filteredLessChances
+                .map(
+                  (college, idx) => `
+                <tr>
+                  <td class="sno">${filteredHighChances.length + idx + 1}</td>
                   <td class="college-name">${college.name || 'N/A'}</td>
                   <td class="location">${college.place || 'N/A'}</td>
                   <td class="branch">${college.branch || 'N/A'}</td>
@@ -379,11 +405,10 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
         </div>
       )}
 
-      {/* Main Table Modal */}
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-7xl my-4 sm:my-8 max-h-[90vh] overflow-y-auto">
+      {/* Main Content - Not Modal */}
+      <div className="bg-white w-full">
         {/* Header */}
-        <div className="border-b px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-r from-blue-50 to-blue-100 sticky top-0">
+        <div className="border-b px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-b from-[#F1F8FC] to-[#E0EFF9]">
           <div className="flex-1">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">
               College Predictions
@@ -391,15 +416,9 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
             <p className="text-xs sm:text-sm text-gray-600 mt-2">
               Rank: <span className="font-bold text-blue-600">{filter.rank}</span> | Category:{" "}
               <span className="font-bold text-blue-600">{filter.caste}</span> | Gender:{" "}
-              <span className="font-bold text-blue-600">{filter.gender}</span> | Total: <span className="font-bold text-blue-600">{filteredColleges.length}</span>
+              <span className="font-bold text-blue-600">{filter.gender}</span> | High: <span className="font-bold text-green-600">{filteredHighChances.length}</span> | Less: <span className="font-bold text-orange-600">{filteredLessChances.length}</span>
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-2xl sm:text-3xl font-bold self-end sm:self-auto"
-          >
-            ×
-          </button>
         </div>
 
         {/* Controls */}
@@ -444,109 +463,166 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
           {/* PDF Download Button */}
           <button
             onClick={handleDownloadPDF}
-            className="px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold text-xs sm:text-sm transition whitespace-nowrap"
+            className="px-3 sm:px-4 py-2 bg-[#D3540D] text-white rounded-lg hover:bg-[#D3540D] font-semibold text-xs sm:text-sm transition whitespace-nowrap"
           >
             Download as PDF
           </button>
         </div>
 
         {/* Table - Desktop View */}
-        <div className="hidden sm:block overflow-x-auto p-4 sm:p-6" id="colleges-table-pdf">
-          {filteredColleges.length === 0 ? (
+        <div className="hidden sm:block overflow-x-auto p-4 sm:p-6">
+          {filteredHighChances.length === 0 && filteredLessChances.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-600 text-lg">No colleges found for selected filters</p>
             </div>
           ) : (
             <>
-              {/* PDF Header */}
-              <div className="mb-4 text-xs text-gray-600 print:block">
-                <p className="font-bold">College Predictions Report</p>
-                <p>Rank: {filter.rank} | Category: {filter.caste} | Gender: {filter.gender}</p>
-                <p>Date: {new Date().toLocaleDateString()}</p>
-              </div>
-              
-              <table className="w-full text-xs sm:text-sm">
-                <thead>
-                  <tr className="bg-blue-50 border-b">
-                    <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">S.No</th>
-                    <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">College Name</th>
-                    <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">Location</th>
-                    <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">Branch</th>
-                    <th className="px-3 py-2 sm:px-4 sm:py-3 text-center font-semibold text-gray-700">Cutoff</th>
-                    <th className="px-3 py-2 sm:px-4 sm:py-3 text-center font-semibold text-gray-700">Fee (₹)</th>
-                    <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">Affiliation</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredColleges.map((college, idx) => (
-                    <tr
-                      key={`${idx}`}
-                      className={`border-b ${
-                        idx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                      }`}
-                    >
-                      <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-600 font-semibold text-xs sm:text-sm text-center">{idx + 1}</td>
-                      <td className="px-3 py-2 sm:px-4 sm:py-3 font-semibold text-gray-800 text-xs sm:text-sm">{college.name}</td>
-                      <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-700 text-xs sm:text-sm">{college.place}</td>
-                      <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-700 font-semibold text-xs sm:text-sm">{college.branch}</td>
-                      <td className="px-3 py-2 sm:px-4 sm:py-3 text-center font-bold text-blue-600 text-xs sm:text-sm">
-                        {college.cutoff_rank.toLocaleString()}
-                      </td>
-                      <td className="px-3 py-2 sm:px-4 sm:py-3 text-center text-gray-700 text-xs sm:text-sm">
-                        {college.college_fee
-                          ? `₹${(college.college_fee / 1000).toFixed(0)}K`
-                          : "N/A"}
-                      </td>
-                      <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-600 text-xs">{college.affiliated}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {/* HIGH CHANCES TABLE */}
+              {filteredHighChances.length > 0 && (
+                <div className="mb-8">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-8 bg-[#1A699F] rounded"></div>
+                    <h3 className="text-xl font-bold text-[#1A699F]">🎯 HIGH CHANCES ({filteredHighChances.length})</h3>
+                    <span className="text-xs text-gray-600 ml-auto">Your Rank ≤ Cutoff Rank - Good Probability</span>
+                  </div>
+                  <table className="w-full text-xs sm:text-sm">
+                    <thead>
+                      <tr className="border-b border-[#b1d5ed]">
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">S.No</th>
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">College Name</th>
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">Location</th>
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">Branch</th>
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-center font-semibold text-gray-700">Cutoff</th>
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-center font-semibold text-gray-700">Fee (₹)</th>
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">Affiliation</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredHighChances.map((college, idx) => (
+                        <tr
+                          key={`high-${idx}`}
+                          className="border-b border-[#b1d5ed] bg-[#ecf3f8] hover:bg-[#d1e9f8] transition"
+                        >
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-600 font-semibold text-xs sm:text-sm text-center">{idx + 1}</td>
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 font-semibold text-gray-800 text-xs sm:text-sm">{college.name}</td>
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-700 text-xs sm:text-sm">{college.place}</td>
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-700 font-semibold text-xs sm:text-sm">{college.branch}</td>
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 text-center font-bold text-[#1A699F] text-xs sm:text-sm">
+                            {college.cutoff_rank.toLocaleString()}
+                          </td>
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 text-center text-gray-700 text-xs sm:text-sm">
+                            {college.college_fee ? `₹${(college.college_fee / 1000).toFixed(0)}K` : "N/A"}
+                          </td>
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-600 text-xs">{college.affiliated}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* LESS CHANCES TABLE */}
+              {filteredLessChances.length > 0 && (
+                <div className="mb-8">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-2 h-8 bg-orange-500 rounded"></div>
+                    <h3 className="text-xl font-bold text-orange-700">⭐ LESS CHANCES ({filteredLessChances.length})</h3>
+                    <span className="text-xs text-gray-600 ml-auto">Your Rank {'>'}  Cutoff Rank - Lower Probability</span>
+                  </div>
+                  <table className="w-full text-xs sm:text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">S.No</th>
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">College Name</th>
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">Location</th>
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">Branch</th>
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-center font-semibold text-gray-700">Cutoff</th>
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-center font-semibold text-gray-700">Fee (₹)</th>
+                        <th className="px-3 py-2 sm:px-4 sm:py-3 text-left font-semibold text-gray-700">Affiliation</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredLessChances.map((college, idx) => (
+                        <tr
+                          key={`less-${idx}`}
+                          className="border-b bg-orange-50 hover:bg-orange-100 transition"
+                        >
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-600 font-semibold text-xs sm:text-sm text-center">{idx + 1}</td>
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 font-semibold text-gray-800 text-xs sm:text-sm">{college.name}</td>
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-700 text-xs sm:text-sm">{college.place}</td>
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-700 font-semibold text-xs sm:text-sm">{college.branch}</td>
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 text-center font-bold text-orange-600 text-xs sm:text-sm">
+                            {college.cutoff_rank.toLocaleString()}
+                          </td>
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 text-center text-gray-700 text-xs sm:text-sm">
+                            {college.college_fee ? `₹${(college.college_fee / 1000).toFixed(0)}K` : "N/A"}
+                          </td>
+                          <td className="px-3 py-2 sm:px-4 sm:py-3 text-gray-600 text-xs">{college.affiliated}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </>
           )}
         </div>
 
         {/* Card View - Mobile */}
-        <div className="sm:hidden p-4 space-y-3" id="colleges-table-pdf">
-          {filteredColleges.length === 0 ? (
+        <div className="sm:hidden p-4 space-y-3">
+          {filteredHighChances.length === 0 && filteredLessChances.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-gray-600">No colleges found</p>
             </div>
           ) : (
-            filteredColleges.map((college, idx) => (
-              <div
-                key={`${idx}`}
-                className="border border-gray-200 rounded-lg p-3 bg-white hover:shadow-md transition"
-              >
-                <div className="font-bold text-sm text-gray-800 mb-2">{college.name}</div>
-                <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
-                  <div>
-                    <span className="font-semibold text-gray-700">S.No:</span> {idx + 1}
+            <>
+              {filteredHighChances.length > 0 && (
+                <div>
+                  <div className="bg-[#ecf3f8] p-3 rounded-lg mb-3 border-b-2 border-[#b1d5ed]">
+                    <h3 className="font-bold text-[#1A699F]">🎯 HIGH CHANCES ({filteredHighChances.length})</h3>
                   </div>
-                  <div>
-                    <span className="font-semibold text-gray-700">Branch:</span> {college.branch}
-                  </div>
-                  <div>
-                    <span className="font-semibold text-gray-700">Location:</span> {college.place}
-                  </div>
-                  <div>
-                    <span className="font-semibold text-gray-700">Affiliation:</span> {college.affiliated}
-                  </div>
-                  <div className="col-span-2">
-                    <span className="font-semibold text-gray-700">Cutoff Rank:</span>{" "}
-                    <span className="font-bold text-blue-600">{college.cutoff_rank.toLocaleString()}</span>
-                  </div>
-                  <div className="col-span-2">
-                    <span className="font-semibold text-gray-700">Fee:</span>{" "}
-                    {college.college_fee ? `₹${college.college_fee.toLocaleString()}` : "N/A"}
-                  </div>
+                  {filteredHighChances.map((college, idx) => (
+                    <div key={`high-mobile-${idx}`} className="rounded-lg p-4 bg-[#ecf3f8] mb-2 shadow-sm border-l-4 border-[#1A699F]">
+                      <div className="font-bold text-sm text-[#1A699F] mb-3">{college.name}</div>
+                      <div className="space-y-2">
+                        <div className="grid grid-cols-2 gap-3 text-xs">
+                          <p><span className="font-semibold text-gray-700">Branch:</span> <span className="text-gray-600">{college.branch}</span></p>
+                          <p><span className="font-semibold text-gray-700">Rank:</span> <span className="font-bold text-[#1A699F]">{college.cutoff_rank.toLocaleString()}</span></p>
+                          <p><span className="font-semibold text-gray-700">Location:</span> <span className="text-gray-600">{college.place}</span></p>
+                          <p><span className="font-semibold text-gray-700">Fee:</span> <span className="text-gray-600">₹{college.college_fee ? college.college_fee.toLocaleString() : 'N/A'}</span></p>
+                          <p className="col-span-2"><span className="font-semibold text-gray-700">Affiliation:</span> <span className="text-gray-600">{college.affiliated}</span></p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            ))
+              )}
+
+              {filteredLessChances.length > 0 && (
+                <div>
+                  <div className="bg-orange-50 p-3 rounded-lg mb-3 mt-4 border-b-2 border-orange-300">
+                    <h3 className="font-bold text-orange-700">⭐ LESS CHANCES ({filteredLessChances.length})</h3>
+                  </div>
+                  {filteredLessChances.map((college, idx) => (
+                    <div key={`less-mobile-${idx}`} className="rounded-lg p-4 bg-orange-50 mb-2 shadow-sm border-l-4 border-orange-500">
+                      <div className="font-bold text-sm text-orange-700 mb-3">{college.name}</div>
+                      <div className="space-y-2">
+                        <div className="grid grid-cols-2 gap-3 text-xs">
+                          <p><span className="font-semibold text-gray-700">Branch:</span> <span className="text-gray-600">{college.branch}</span></p>
+                          <p><span className="font-semibold text-gray-700">Rank:</span> <span className="font-bold text-orange-600">{college.cutoff_rank.toLocaleString()}</span></p>
+                          <p><span className="font-semibold text-gray-700">Location:</span> <span className="text-gray-600">{college.place}</span></p>
+                          <p><span className="font-semibold text-gray-700">Fee:</span> <span className="text-gray-600">₹{college.college_fee ? college.college_fee.toLocaleString() : 'N/A'}</span></p>
+                          <p className="col-span-2"><span className="font-semibold text-gray-700">Affiliation:</span> <span className="text-gray-600">{college.affiliated}</span></p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
-    </div>
     </>
   );
 }

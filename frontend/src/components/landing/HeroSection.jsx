@@ -1,5 +1,7 @@
-import { Link } from "react-router-dom";
-import { ArrowRight, Target, MessageSquare, Star } from "lucide-react";
+import { ArrowRight, Target, Megaphone, MessageSquare, Star } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import PredictCollegeModal from "../PredictCollegeModal";
 
 function ReviewIcon() {
   return (
@@ -39,9 +41,16 @@ function InfoTooltip() {
 }
 
 const buttonBase =
-  "flex items-center justify-between gap-6 rounded-full font-semibold text-base transition-opacity w-full md:w-[280px] px-6 py-3.5";
+  "flex items-center justify-between gap-1 rounded-full font-semibold text-base transition-opacity w-full md:w-[280px] px-10 py-3.5";
 
 export default function HeroSection() {
+  const navigate = useNavigate();
+  const [showPredictModal, setShowPredictModal] = useState(false);
+
+  const handlePredictResults = (data) => {
+    setShowPredictModal(false);
+    navigate("/college-results", { state: data });
+  };
   return (
     <section className="w-full bg-white py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -73,15 +82,15 @@ export default function HeroSection() {
         <div className="mx-auto max-w-md md:max-w-none">
           <div className="flex flex-col md:flex-row md:items-start md:justify-center gap-3 md:gap-2">
             <div className="flex flex-col items-center md:items-start w-full md:w-auto">
-              <Link
-                to="/test"
+              <button
+                onClick={() => setShowPredictModal(true)}
                 className={`${buttonBase} text-white hover:opacity-90`}
                 style={{ backgroundColor: "#D3540D" }}
               >
                 <Target size={20} className="shrink-0" />
                 <span>College Predictor</span>
                 <ArrowRight size={18} className="shrink-0" />
-              </Link>
+              </button>
               <InfoTooltip />
             </div>
 
@@ -96,6 +105,13 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
+
+      {/* Predict College Modal */}
+      <PredictCollegeModal
+        isOpen={showPredictModal}
+        onClose={() => setShowPredictModal(false)}
+        onResults={handlePredictResults}
+      />
     </section>
   );
 }

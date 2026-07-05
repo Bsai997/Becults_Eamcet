@@ -6,6 +6,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import StudentPerformance from "./pages/StudentPerformance";
 import TestPage from "./pages/TestPage";
 import ResultPage from "./pages/ResultPage";
+import CollegeResultsPage from "./pages/CollegeResultsPage";
 import { useAuth } from "./context/AuthContext";
 
 const ProtectedRoute = ({ role, children }) => {
@@ -20,6 +21,9 @@ export default function App() {
     <Routes>
       {/* Landing Page - Public */}
       <Route path="/" element={<LandingPage />} />
+      
+      {/* College Results Page - Public */}
+      <Route path="/college-results" element={<CollegeResultsPage />} />
       
       {/* Login Page - Public */}
       <Route path="/login" element={<LoginPage />} />
