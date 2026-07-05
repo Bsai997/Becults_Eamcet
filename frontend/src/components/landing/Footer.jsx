@@ -54,17 +54,17 @@ export default function Footer() {
             <img
               src="/logo%20white.png"
               alt="EAMCET.Cults"
-              className="h-24 w-auto max-w-full mb-4 object-contain object-left"
+              className="h-20 w-auto max-w-full mb-2 object-contain object-left"
             />
-            <p className="text-gray-400">
+            <p className="text-gray-400 text-sm">
               Your one-stop platform for EAMCET preparation with mock tests, chapter-wise practice, and accurate college predictions.
             </p>
           </div>
 
           <div>
-            <h3 className="text-xl font-extrabold mb-4 text-[#1A699F]">Contact Us</h3>
-            <p className="text-gray-400 flex items-center gap-2">
-              <Mail size={20} strokeWidth={1.5} className="text-white" />{" "}
+            <h3 className="text-lg font-extrabold mb-2 text-[#1A699F]">Contact Us</h3>
+            <p className="text-gray-400 flex items-center gap-2 text-sm">
+              <Mail size={18} strokeWidth={1.5} className="text-white" />{" "}
               <a
                 href="mailto:becults.lfib@gmail.com"
                 className="hover:opacity-80"
@@ -76,8 +76,8 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xl font-extrabold mb-4 text-[#1A699F]">Follow Us</h3>
-            <div className="flex gap-4">
+            <h3 className="text-lg font-extrabold mb-2 text-[#1A699F]">Follow Us</h3>
+            <div className="flex gap-3">
               <a
                 href="https://www.instagram.com/becults/"
                 target="_blank"

@@ -102,7 +102,7 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
       <html>
         <head>
           <meta charset="UTF-8">
-          <title>College Predictions Report</title>
+          <title>EAMCET.Cults</title>
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             html, body { 
@@ -115,98 +115,142 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
             .header { 
               margin-bottom: 30px; 
               padding-bottom: 20px;
-              border-bottom: 3px solid #1e40af;
+              border-bottom: 3px solid #1A699F;
             }
             .header h1 { 
-              font-size: 24px; 
-              color: #1e40af; 
-              margin-bottom: 12px;
+              font-size: 28px; 
+              color: #1A699F; 
+              margin-bottom: 15px;
               font-weight: 700;
-            }
-            .header p {
-              font-size: 13px;
-              color: #555;
-              line-height: 1.6;
-              margin: 5px 0;
             }
             
             .filter-section {
               display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: 15px;
-              margin-top: 12px;
-              padding-top: 12px;
-              border-top: 1px solid #e5e7eb;
+              grid-template-columns: 1fr 1fr 1fr;
+              gap: 20px;
+              margin-top: 15px;
+              padding-top: 15px;
+              border-top: 2px solid #e5e7eb;
             }
             
             .filter-item {
-              font-size: 12px;
-              color: #666;
+              font-size: 13px;
+              color: #555;
             }
             
             .filter-item strong {
-              color: #1e40af;
-              font-weight: 600;
+              color: #1A699F;
+              font-weight: 700;
+              display: block;
+              margin-bottom: 5px;
+            }
+            
+            .section-header {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              padding: 15px 18px;
+              border-radius: 6px;
+              margin-top: 25px;
+              margin-bottom: 12px;
+              font-size: 16px;
+              font-weight: 700;
+            }
+            
+            .section-header.high {
+              background-color: #1A699F;
+              color: white;
+              border-left: 5px solid #0d47a1;
+              box-shadow: 0 2px 4px rgba(26, 105, 159, 0.3);
+            }
+            
+            .section-header.less {
+              background-color: #D3540D;
+              color: white;
+              border-left: 5px solid #B8420A;
+              box-shadow: 0 2px 4px rgba(211, 84, 13, 0.3);
             }
             
             table { 
               width: 100%; 
               border-collapse: collapse;
-              margin-top: 20px;
-              box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+              margin-bottom: 15px;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
             
             th { 
-              background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+              background-color: #1A699F;
               color: white;
-              padding: 12px 10px;
+              padding: 15px 12px;
               text-align: left;
-              font-weight: 600;
+              font-weight: 700;
               font-size: 12px;
-              border: 1px solid #1e40af;
+              border: 2px solid #0d47a1;
               text-transform: uppercase;
               letter-spacing: 0.5px;
+              box-shadow: 0 2px 3px rgba(26, 105, 159, 0.2);
+            }
+            
+            th.less-header {
+              background-color: #D3540D !important;
+              border-color: #B8420A !important;
+              box-shadow: 0 2px 3px rgba(211, 84, 13, 0.2);
             }
             
             td { 
-              padding: 11px 10px;
+              padding: 12px;
               border: 1px solid #d1d5db;
               font-size: 11px;
               color: #374151;
             }
             
-            tr:nth-child(even) td { 
-              background-color: #f3f4f6;
+            .table-high tbody tr {
+              background-color: #ecf3f8;
+              border-bottom: 1px solid #b1d5ed;
             }
             
-            tr:nth-child(odd) td { 
-              background-color: #ffffff;
+            .table-high tbody tr:nth-child(even) {
+              background-color: #f0f9ff;
             }
             
-            tbody tr:hover td {
-              background-color: #eff6ff;
+            .table-less tbody tr {
+              background-color: #FEF3E2;
+              border-bottom: 1px solid #FFE4C4;
+            }
+            
+            .table-less tbody tr:nth-child(even) {
+              background-color: #FEF9F0;
             }
             
             .sno { 
               text-align: center;
-              font-weight: 600;
-              color: #1e40af;
-              width: 40px;
+              font-weight: 700;
+              width: 50px;
+            }
+            
+            .table-high .sno {
+              color: #1A699F;
+            }
+            
+            .table-less .sno {
+              color: #D3540D;
             }
             
             .rank { 
-              color: #1e40af; 
-              font-weight: 600;
+              font-weight: 700;
               text-align: center;
             }
             
-            .fee {
-              text-align: right;
-              font-weight: 500;
+            .table-high .rank {
+              color: #1A699F;
+            }
+            
+            .table-less .rank {
+              color: #D3540D;
             }
             
             .college-name {
-              font-weight: 600;
+              font-weight: 700;
               color: #1f2937;
             }
             
@@ -216,11 +260,18 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
             
             .footer { 
               margin-top: 30px; 
-              padding-top: 15px;
-              font-size: 10px; 
+              padding-top: 20px;
+              font-size: 11px; 
               color: #999; 
               text-align: center;
-              border-top: 1px solid #d1d5db;
+              border-top: 2px solid #d1d5db;
+            }
+            
+            .count {
+              font-size: 13px;
+              font-weight: 600;
+              opacity: 0.95;
+              margin-left: 5px;
             }
             
             @page {
@@ -237,69 +288,92 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
         </head>
         <body>
           <div class="header">
-            <h1>📊 College Predictions Report</h1>
+            <h1>📊 EAMCET College Predictions Report</h1>
             <div class="filter-section">
               <div class="filter-item"><strong>Student Name:</strong> ${name}</div>
               <div class="filter-item"><strong>Mobile No:</strong> ${mobileNo}</div>
               <div class="filter-item"><strong>Student Rank:</strong> ${filter.rank}</div>
-              <div class="filter-item"><strong>Total Colleges:</strong> ${filteredColleges.length}</div>
               <div class="filter-item"><strong>Category:</strong> ${filter.caste}</div>
               <div class="filter-item"><strong>Gender:</strong> ${filter.gender}</div>
+              <div class="filter-item"><strong>Generated:</strong> ${new Date().toLocaleDateString()}</div>
             </div>
-            <p style="margin-top: 12px; font-size: 11px; color: #666;">
-              <strong>Generated:</strong> ${new Date().toLocaleString()} | 
-              <strong>Platform:</strong> EAMCET College Prediction System
-            </p>
           </div>
 
-          <table>
-            <thead>
-              <tr>
-                <th class="sno">S.No</th>
-                <th>College Name</th>
-                <th>Location</th>
-                <th>Branch</th>
-                <th style="text-align: center;">Cutoff Rank</th>
-                <th style="text-align: right;">Fee (₹)</th>
-                <th>Affiliation</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${filteredHighChances
-                .map(
-                  (college, idx) => `
+          ${filteredHighChances.length > 0 ? `
+            <div class="section-header high">
+              🎯 HIGH CHANCES <span class="count">(${filteredHighChances.length} Colleges)</span>
+            </div>
+            <table class="table-high">
+              <thead>
                 <tr>
-                  <td class="sno">${idx + 1}</td>
-                  <td class="college-name">${college.name || 'N/A'}</td>
-                  <td class="location">${college.place || 'N/A'}</td>
-                  <td class="branch">${college.branch || 'N/A'}</td>
-                  <td class="rank">${college.cutoff_rank ? college.cutoff_rank.toLocaleString() : 'N/A'}</td>
-                  <td class="fee">₹${college.college_fee ? college.college_fee.toLocaleString() : 'N/A'}</td>
-                  <td class="affiliation">${college.affiliated || 'N/A'}</td>
+                  <th class="sno">S.No</th>
+                  <th>College Name</th>
+                  <th>Location</th>
+                  <th>Branch</th>
+                  <th style="text-align: center;">Cutoff Rank</th>
+                  <th style="text-align: right;">Fee (₹)</th>
+                  <th>Affiliation</th>
                 </tr>
-              `
-                )
-                .join("")}
-              ${filteredLessChances
-                .map(
-                  (college, idx) => `
-                <tr>
-                  <td class="sno">${filteredHighChances.length + idx + 1}</td>
-                  <td class="college-name">${college.name || 'N/A'}</td>
-                  <td class="location">${college.place || 'N/A'}</td>
-                  <td class="branch">${college.branch || 'N/A'}</td>
-                  <td class="rank">${college.cutoff_rank ? college.cutoff_rank.toLocaleString() : 'N/A'}</td>
-                  <td class="fee">₹${college.college_fee ? college.college_fee.toLocaleString() : 'N/A'}</td>
-                  <td class="affiliation">${college.affiliated || 'N/A'}</td>
+              </thead>
+              <tbody>
+                ${filteredHighChances
+                  .map(
+                    (college, idx) => `
+                  <tr>
+                    <td class="sno">${idx + 1}</td>
+                    <td class="college-name">${college.name || 'N/A'}</td>
+                    <td class="location">${college.place || 'N/A'}</td>
+                    <td class="branch">${college.branch || 'N/A'}</td>
+                    <td class="rank">${college.cutoff_rank ? college.cutoff_rank.toLocaleString() : 'N/A'}</td>
+                    <td style="text-align: right;">₹${college.college_fee ? college.college_fee.toLocaleString() : 'N/A'}</td>
+                    <td class="affiliation">${college.affiliated || 'N/A'}</td>
+                  </tr>
+                `
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          ` : ''}
+
+          ${filteredLessChances.length > 0 ? `
+            <div class="section-header less">
+              ⭐ LESS CHANCES <span class="count">(${filteredLessChances.length} Colleges)</span>
+            </div>
+            <table class="table-less">
+              <thead>
+                <tr style="background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%);">
+                  <th class="sno" style="background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">S.No</th>
+                  <th style="background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">College Name</th>
+                  <th style="background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">Location</th>
+                  <th style="background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">Branch</th>
+                  <th style="text-align: center; background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">Cutoff Rank</th>
+                  <th style="text-align: right; background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">Fee (₹)</th>
+                  <th style="background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">Affiliation</th>
                 </tr>
-              `
-                )
-                .join("")}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                ${filteredLessChances
+                  .map(
+                    (college, idx) => `
+                  <tr>
+                    <td class="sno">${filteredHighChances.length + idx + 1}</td>
+                    <td class="college-name">${college.name || 'N/A'}</td>
+                    <td class="location">${college.place || 'N/A'}</td>
+                    <td class="branch">${college.branch || 'N/A'}</td>
+                    <td class="rank">${college.cutoff_rank ? college.cutoff_rank.toLocaleString() : 'N/A'}</td>
+                    <td style="text-align: right;">₹${college.college_fee ? college.college_fee.toLocaleString() : 'N/A'}</td>
+                    <td class="affiliation">${college.affiliated || 'N/A'}</td>
+                  </tr>
+                `
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          ` : ''}
 
           <div class="footer">
-            <p>This is an auto-generated report from the EAMCET College Prediction Platform. For official information, visit the respective college websites.</p>
+            <p>This is an auto-generated report from EAMCET College Prediction Platform. For official information, visit the respective college websites.</p>
+            <p style="margin-top: 10px; font-size: 10px;">Total Colleges: <strong>${filteredHighChances.length + filteredLessChances.length}</strong> | High Chances: <strong>${filteredHighChances.length}</strong> | Less Chances: <strong>${filteredLessChances.length}</strong></p>
           </div>
         </body>
       </html>
@@ -329,7 +403,7 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
   };
 
   const handleDownloadPDF = () => {
-    if (filteredColleges.length === 0) {
+    if (filteredHighChances.length === 0 && filteredLessChances.length === 0) {
       alert("No data to download. Please search first.");
       return;
     }
@@ -379,6 +453,18 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Your Rank
+                </label>
+                <input
+                  type="number"
+                  value={filter.rank}
+                  disabled
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 font-semibold cursor-not-allowed"
+                />
+              </div>
             </div>
 
             <div className="flex gap-3">
@@ -396,7 +482,7 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
               <button
                 onClick={saveTOGoogleSheet}
                 disabled={isLoading}
-                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2 bg-[#1A699F] text-white rounded-lg hover:bg-[#1A699F] font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? "Processing..." : "Download PDF"}
               </button>
