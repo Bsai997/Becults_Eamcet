@@ -1,99 +1,101 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import PredictCollegeModal from '../PredictCollegeModal';
-import CollegeResultsTable from '../CollegeResultsTable';
+import { Link } from "react-router-dom";
+import { ArrowRight, Target, MessageSquare, Star } from "lucide-react";
+
+function ReviewIcon() {
+  return (
+    <span className="relative inline-flex shrink-0">
+      <MessageSquare size={20} strokeWidth={2} />
+      <Star
+        size={8}
+        className="absolute -top-0.5 -right-1 fill-current stroke-current"
+        strokeWidth={2}
+      />
+    </span>
+  );
+}
+
+function InfoTooltip() {
+  return (
+    <div className="relative w-full md:w-[420px] mt-3 md:mt-2">
+      <div
+        className="absolute -top-2.5 left-8 w-0 h-0"
+        style={{
+          borderLeft: "10px solid transparent",
+          borderRight: "10px solid transparent",
+          borderBottom: "10px solid #1A699F",
+        }}
+      />
+      <div
+        className="rounded-lg px-4 py-3 text-white text-sm font-medium text-center md:text-left"
+        style={{ backgroundColor: "#1A699F" }}
+      >
+        <span className="font-bold">First,</span> check{" "}
+        <span className="font-bold">colleges</span> around your{" "}
+        <span className="font-bold">EAMCET rank</span> and{" "}
+        <span className="font-bold">download the list.</span>
+      </div>
+    </div>
+  );
+}
+
+const buttonBase =
+  "flex items-center justify-between gap-6 rounded-full font-semibold text-base transition-opacity w-full md:w-[280px] px-6 py-3.5";
 
 export default function HeroSection() {
-  const navigate = useNavigate();
-  const [showPredictModal, setShowPredictModal] = useState(false);
-  const [collegeResults, setCollegeResults] = useState(null);
-  const [resultsFilter, setResultsFilter] = useState(null);
-  const [resultsData, setResultsData] = useState(null);
-
-  const handleStartTest = () => {
-    navigate('/login');
-  };
-
-  const handleCollegeReviews = () => {
-    window.open('https://becults-colleges-review.vercel.app/', '_blank');
-  };
-
-  const handlePredictResults = (data) => {
-    setCollegeResults(data.colleges);
-    setResultsFilter(data.filter);
-    setResultsData(data);
-    setShowPredictModal(false);
-  };
-
   return (
-    <>
-      <div className="bg-gradient-to-b from-green-50 to-white py-12 md:py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Main Heading */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 mb-3 md:mb-4 leading-tight">
-            BECULTS.EAMCET
+    <section className="w-full bg-white py-16 md:py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-6">
+          <p className="text-sm font-medium text-slate-600">
+            Trusted by Inter Students
+          </p>
+        </div>
+
+        <div className="text-center mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+            Your <span style={{ color: "#1A699F" }}>EAMCET</span> Rank
+            <br />
+            with <span style={{ color: "#D3540D" }}>Seniors</span>{" "}
+            <span style={{ color: "#1A699F" }}>Suggestion</span>
+            <br />
+            = <span style={{ color: "#1A699F" }}>Dream</span> College
           </h1>
+        </div>
 
-          {/* Subheading */}
-          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-green-700 font-semibold mb-4 md:mb-6">
-            ni seat nuve kotaliii
+        <div className="text-center mb-10">
+          <p className="text-base md:text-lg text-slate-700 max-w-2xl mx-auto">
+            Built by Engineering Students. Helping you with College Predictor,
+            College Reviews, Mock Tests & Counselling—based on real student
+            experiences
           </p>
+        </div>
 
-          {/* Description */}
-          <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-8 md:mb-12 max-w-2xl mx-auto px-2">
-            Prepare for EAMCET with comprehensive mock tests, chapter-wise practice, real student reviews, and accurate college predictions powered by AI. Your journey to your dream college starts here.
-          </p>
-
-          {/* Three Buttons */}
-          <div className="flex flex-col sm:flex-col md:grid md:grid-cols-3 gap-2 sm:gap-3 md:gap-4 justify-center items-center w-full max-w-sm sm:max-w-2xl md:max-w-3xl mx-auto px-2">
-            <button
-              onClick={handleStartTest}
-              className="w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-4 bg-green-600 text-white font-bold text-sm sm:text-base rounded-lg hover:bg-green-700 transition transform hover:scale-105 shadow-lg active:scale-95"
-            >
-              Start Test
-            </button>
-
-            <button
-              onClick={() => {
-                console.log('Predict Colleges clicked');
-                setShowPredictModal(true);
-              }}
-              className="w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-4 bg-blue-600 text-white font-bold text-sm sm:text-base rounded-lg hover:bg-blue-700 transition transform hover:scale-105 shadow-lg active:scale-95"
-            >
-              Predict Colleges
-            </button>
+        <div className="mx-auto max-w-md md:max-w-none">
+          <div className="flex flex-col md:flex-row md:items-start md:justify-center gap-3 md:gap-2">
+            <div className="flex flex-col items-center md:items-start w-full md:w-auto">
+              <Link
+                to="/test"
+                className={`${buttonBase} text-white hover:opacity-90`}
+                style={{ backgroundColor: "#D3540D" }}
+              >
+                <Target size={20} className="shrink-0" />
+                <span>College Predictor</span>
+                <ArrowRight size={18} className="shrink-0" />
+              </Link>
+              <InfoTooltip />
+            </div>
 
             <button
-              onClick={handleCollegeReviews}
-              className="w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-4 bg-purple-600 text-white font-bold text-sm sm:text-base rounded-lg hover:bg-purple-700 transition transform hover:scale-105 shadow-lg active:scale-95"
+              type="button"
+              className={`${buttonBase} bg-white border-2 border-black text-black hover:bg-slate-50`}
             >
-              College Reviews
+              <ReviewIcon />
+              <span>College Reviews</span>
+              <ArrowRight size={18} className="shrink-0" />
             </button>
           </div>
         </div>
       </div>
-
-      {/* Predict College Modal */}
-      <PredictCollegeModal 
-        isOpen={showPredictModal} 
-        onClose={() => setShowPredictModal(false)}
-        onResults={handlePredictResults}
-      />
-
-      {/* College Results Table - Reused from StudentDashboard */}
-      {collegeResults && resultsData && (
-        <CollegeResultsTable
-          colleges={collegeResults}
-          filter={resultsFilter}
-          aboveRank={resultsData.above_rank || []}
-          belowRank={resultsData.below_rank || []}
-          onClose={() => {
-            setCollegeResults(null);
-            setResultsFilter(null);
-            setResultsData(null);
-          }}
-        />
-      )}
-    </>
+    </section>
   );
 }
