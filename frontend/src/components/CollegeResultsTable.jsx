@@ -288,7 +288,7 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
         </head>
         <body>
           <div class="header">
-            <h1>📊 EAMCET College Predictions Report</h1>
+            <h1>📊 EAMCET.Cults/h1>
             <div class="filter-section">
               <div class="filter-item"><strong>Student Name:</strong> ${name}</div>
               <div class="filter-item"><strong>Mobile No:</strong> ${mobileNo}</div>
