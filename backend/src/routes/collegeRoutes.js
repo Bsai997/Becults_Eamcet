@@ -4,27 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 
 const router = express.Router()
 
-/**
- * POST /api/student/predict-colleges
- * Get colleges matching student's rank, caste, gender, and branch
- * Returns 30 colleges above rank + 30 colleges below rank = 60 total
- * 
- * Body: {
- *   rank: number (e.g., 5000),
- *   caste: string (OC, SC, ST, BCA, BCB, BCC, BCD, BCE, OC_EWS),
- *   gender: string (BOYS, GIRLS),
- *   branch?: string (optional filter)
- * }
- * 
- * Returns: {
- *   colleges: [{
- *     id, name, place, instcode, type, branch_code, affiliated,
- *     cutoff_rank, college_fee, established, district
- *   }],
- *   above_rank: [...],  // 30 colleges with cutoff >= student rank
- *   below_rank: [...]   // 30 colleges with cutoff < student rank
- * }
- */
+ 
 router.post("/predict-colleges", async (req, res, next) => {
   try {
     const { rank, caste, gender, branch } = req.body;
@@ -89,7 +69,7 @@ router.post("/predict-colleges", async (req, res, next) => {
     const { data: aboveRankData, error: errorAbove } = await buildBaseQuery()
       .gte(columnName, rank)
       .order(columnName, { ascending: true })
-      .limit(30);
+      .limit(80);
 
     // console.log("Above rank query - Count:", aboveRankData?.length, "Error:", errorAbove);
 
@@ -99,7 +79,7 @@ router.post("/predict-colleges", async (req, res, next) => {
     const { data: belowRankData, error: errorBelow } = await buildBaseQuery()
       .lt(columnName, rank)
       .order(columnName, { ascending: false })
-      .limit(30);
+      .limit(20);
 
     // console.log("Below rank query - Count:", belowRankData?.length, "Error:", errorBelow);
 
@@ -114,7 +94,7 @@ router.post("/predict-colleges", async (req, res, next) => {
       const { data: moreAbove, error: errorMoreAbove } = await buildBaseQuery()
         .gte(columnName, rank)
         .order(columnName, { ascending: true })
-        .limit(60);
+        .limit(80);
 
       if (!errorMoreAbove) {
         finalAboveRank = moreAbove || [];

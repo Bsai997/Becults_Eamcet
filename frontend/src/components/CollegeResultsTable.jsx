@@ -15,11 +15,11 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
 
   // Combine all colleges
   const allColleges = [...(aboveRank || []), ...(belowRank || [])];
-  
+
   // Separate colleges into High Chances and Less Chances
   const highChancesColleges = allColleges.filter(c => filter.rank <= c.cutoff_rank);
   const lessChancesColleges = allColleges.filter(c => filter.rank > c.cutoff_rank);
-  
+
   // Apply filtering and sorting to both categories
   const getFilteredAndSorted = (collegesList) => {
     return collegesList
@@ -35,7 +35,7 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
         return 0;
       });
   };
-  
+
   const filteredHighChances = getFilteredAndSorted(highChancesColleges);
   const filteredLessChances = getFilteredAndSorted(lessChancesColleges);
 
@@ -112,196 +112,207 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
             }
             body { padding: 30px 20px; }
             
-            .header { 
-              margin-bottom: 30px; 
-              padding-bottom: 20px;
-              border-bottom: 3px solid #1A699F;
-            }
-            .header h1 { 
-              font-size: 28px; 
-              color: #1A699F; 
-              margin-bottom: 15px;
-              font-weight: 700;
-            }
+           .header {
+  text-align: center;
+  margin-bottom: 25px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid #1A699F;
+}
+
+.header h1 {
+  font-size: 30px;
+  color: #1A699F;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.header h2{
+  font-size:16px;
+  color:#000;
+  font-weight:600;
+  margin-bottom:4px;
+}
+
+.header p{
+  font-size:13px;
+  color:#D3540D;
+  font-weight:600;
+}
             
-            .filter-section {
-              display: grid;
-              grid-template-columns: 1fr 1fr 1fr;
-              gap: 20px;
-              margin-top: 15px;
-              padding-top: 15px;
-              border-top: 2px solid #e5e7eb;
-            }
-            
-            .filter-item {
-              font-size: 13px;
-              color: #555;
-            }
-            
-            .filter-item strong {
-              color: #1A699F;
-              font-weight: 700;
-              display: block;
-              margin-bottom: 5px;
-            }
-            
-            .section-header {
-              display: flex;
-              align-items: center;
-              gap: 10px;
-              padding: 15px 18px;
-              border-radius: 6px;
-              margin-top: 25px;
-              margin-bottom: 12px;
-              font-size: 16px;
-              font-weight: 700;
-            }
-            
-            .section-header.high {
-              background-color: #1A699F;
-              color: white;
-              border-left: 5px solid #0d47a1;
-              box-shadow: 0 2px 4px rgba(26, 105, 159, 0.3);
-            }
-            
-            .section-header.less {
-              background-color: #D3540D;
-              color: white;
-              border-left: 5px solid #B8420A;
-              box-shadow: 0 2px 4px rgba(211, 84, 13, 0.3);
-            }
-            
-            table { 
-              width: 100%; 
-              border-collapse: collapse;
-              margin-bottom: 15px;
-              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            
-            th { 
-              background-color: #1A699F;
-              color: white;
-              padding: 15px 12px;
-              text-align: left;
-              font-weight: 700;
-              font-size: 12px;
-              border: 2px solid #0d47a1;
-              text-transform: uppercase;
-              letter-spacing: 0.5px;
-              box-shadow: 0 2px 3px rgba(26, 105, 159, 0.2);
-            }
-            
-            th.less-header {
-              background-color: #D3540D !important;
-              border-color: #B8420A !important;
-              box-shadow: 0 2px 3px rgba(211, 84, 13, 0.2);
-            }
-            
-            td { 
-              padding: 12px;
-              border: 1px solid #d1d5db;
-              font-size: 11px;
-              color: #374151;
-            }
-            
-            .table-high tbody tr {
-              background-color: #ecf3f8;
-              border-bottom: 1px solid #b1d5ed;
-            }
-            
-            .table-high tbody tr:nth-child(even) {
-              background-color: #f0f9ff;
-            }
-            
-            .table-less tbody tr {
-              background-color: #FEF3E2;
-              border-bottom: 1px solid #FFE4C4;
-            }
-            
-            .table-less tbody tr:nth-child(even) {
-              background-color: #FEF9F0;
-            }
-            
-            .sno { 
-              text-align: center;
-              font-weight: 700;
-              width: 50px;
-            }
-            
-            .table-high .sno {
-              color: #1A699F;
-            }
-            
-            .table-less .sno {
-              color: #D3540D;
-            }
-            
-            .rank { 
-              font-weight: 700;
-              text-align: center;
-            }
-            
-            .table-high .rank {
-              color: #1A699F;
-            }
-            
-            .table-less .rank {
-              color: #D3540D;
-            }
-            
-            .college-name {
-              font-weight: 700;
-              color: #1f2937;
-            }
-            
-            .location, .branch, .affiliation {
-              color: #555;
-            }
-            
-            .footer { 
-              margin-top: 30px; 
-              padding-top: 20px;
-              font-size: 11px; 
-              color: #999; 
-              text-align: center;
-              border-top: 2px solid #d1d5db;
-            }
-            
-            .count {
-              font-size: 13px;
-              font-weight: 600;
-              opacity: 0.95;
-              margin-left: 5px;
-            }
-            
-            @page {
-              size: A4 landscape;
-              margin: 15mm;
-            }
-            
-            @media print {
-              body { padding: 0; }
-              table { page-break-inside: avoid; }
-              tr { page-break-inside: avoid; }
-            }
+.student-card{
+    border:1px solid #E5E7EB;
+    border-radius:8px;
+    padding:18px;
+    margin-bottom:25px;
+    background:#fff;
+}
+
+.student-title{
+    font-size:16px;
+    font-weight:700;
+    color:#1A699F;
+    margin-bottom:15px;
+    border-bottom:1px solid #E5E7EB;
+    padding-bottom:8px;
+}
+
+.filter-section{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px 30px;
+}
+
+.filter-item{
+    font-size:13px;
+}
+
+.filter-item strong{
+    color:#000;
+}
+.section-header.high{
+
+background:#ECF3F8;
+
+color:#1A699F;
+
+border-left:6px solid #1A699F;
+
+padding:14px 18px;
+
+font-size:16px;
+
+font-weight:700;
+
+border-radius:6px;
+
+margin-bottom:10px;
+
+box-shadow:none;
+}
+.section-header.less{
+
+background:#FEF3E2;
+
+color:#D3540D;
+
+border-left:6px solid #D3540D;
+
+padding:14px 18px;
+
+font-size:16px;
+
+font-weight:700;
+
+border-radius:6px;
+
+margin-bottom:10px;
+
+box-shadow:none;
+}.table-high th{
+
+background:#1A699F;
+
+color:#000;
+
+border:none;
+
+font-size:12px;
+
+padding:12px;
+}
+.table-less th{
+
+background:transparent;
+
+color:#D3540D;
+
+border:2px solid #D3540D;
+
+font-size:12px;
+
+padding:12px;
+
+font-weight:700;
+}
+td{
+
+padding:11px;
+
+border:1px solid #E5E7EB;
+
+font-size:11px;
+
+color:#000;
+}.table-high tbody tr:nth-child(odd){
+
+background:#FFFFFF;
+
+}
+
+.table-high tbody tr:nth-child(even){
+
+background:#ECF3F8;
+
+}
+.table-less tbody tr:nth-child(odd){
+
+background:#FFFFFF;
+
+}
+
+.table-less tbody tr:nth-child(even){
+
+background:#FEF3E2;
+
+}
+.footer{
+
+margin-top:30px;
+
+border-top:2px solid #E5E7EB;
+
+padding-top:15px;
+
+text-align:center;
+
+font-size:11px;
+
+color:#555;
+}
           </style>
         </head>
         <body>
-          <div class="header">
-            <h1>📊 EAMCET.Cults/h1>
-            <div class="filter-section">
-              <div class="filter-item"><strong>Student Name:</strong> ${name}</div>
-              <div class="filter-item"><strong>Mobile No:</strong> ${mobileNo}</div>
-              <div class="filter-item"><strong>Student Rank:</strong> ${filter.rank}</div>
-              <div class="filter-item"><strong>Category:</strong> ${filter.caste}</div>
-              <div class="filter-item"><strong>Gender:</strong> ${filter.gender}</div>
-              <div class="filter-item"><strong>Generated:</strong> ${new Date().toLocaleDateString()}</div>
-            </div>
-          </div>
+         <div class="header">
+    <h1>EAMCET.Cults</h1>
+    <h2>Engineering College Prediction Report</h2>
+</div>
+<div class="student-card">
+<div class="filter-section">
+<div class="filter-item">
+<strong>Name :</strong> ${name}
+</div>
+<div class="filter-item">
+<strong>Rank :</strong> ${filter.rank}
+</div>
 
+<div class="filter-item">
+<strong>Gender :</strong> ${filter.gender}
+</div>
+
+<div class="filter-item">
+<strong>Category :</strong> ${filter.caste}
+</div>
+
+<div class="filter-item">
+<strong>Generated :</strong> ${new Date().toLocaleDateString()}
+</div>
+
+</div>
+
+</div>
           ${filteredHighChances.length > 0 ? `
             <div class="section-header high">
-              🎯 HIGH CHANCES <span class="count">(${filteredHighChances.length} Colleges)</span>
+              HIGH CHANCES <span class="count">(${filteredHighChances.length} Colleges)</span>
             </div>
             <table class="table-high">
               <thead>
@@ -317,8 +328,8 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
               </thead>
               <tbody>
                 ${filteredHighChances
-                  .map(
-                    (college, idx) => `
+          .map(
+            (college, idx) => `
                   <tr>
                     <td class="sno">${idx + 1}</td>
                     <td class="college-name">${college.name || 'N/A'}</td>
@@ -329,32 +340,30 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
                     <td class="affiliation">${college.affiliated || 'N/A'}</td>
                   </tr>
                 `
-                  )
-                  .join("")}
+          )
+          .join("")}
               </tbody>
             </table>
           ` : ''}
 
           ${filteredLessChances.length > 0 ? `
             <div class="section-header less">
-              ⭐ LESS CHANCES <span class="count">(${filteredLessChances.length} Colleges)</span>
+               LESS CHANCES <span class="count">(${filteredLessChances.length} Colleges)</span>
             </div>
             <table class="table-less">
               <thead>
-                <tr style="background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%);">
-                  <th class="sno" style="background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">S.No</th>
-                  <th style="background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">College Name</th>
-                  <th style="background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">Location</th>
-                  <th style="background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">Branch</th>
-                  <th style="text-align: center; background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">Cutoff Rank</th>
-                  <th style="text-align: right; background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">Fee (₹)</th>
-                  <th style="background: linear-gradient(135deg, #D3540D 0%, #EA8C3A 100%); border-color: #D3540D;">Affiliation</th>
-                </tr>
+                <th class="sno">S.No</th>
+                  <th>College Name</th>
+                  <th>Location</th>
+                  <th>Branch</th>
+                  <th style="text-align: center;">Cutoff Rank</th>
+                  <th style="text-align: right;">Fee (₹)</th>
+                  <th>Affiliation</th>
               </thead>
               <tbody>
                 ${filteredLessChances
-                  .map(
-                    (college, idx) => `
+          .map(
+            (college, idx) => `
                   <tr>
                     <td class="sno">${filteredHighChances.length + idx + 1}</td>
                     <td class="college-name">${college.name || 'N/A'}</td>
@@ -365,16 +374,20 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
                     <td class="affiliation">${college.affiliated || 'N/A'}</td>
                   </tr>
                 `
-                  )
-                  .join("")}
+          )
+          .join("")}
               </tbody>
             </table>
           ` : ''}
 
           <div class="footer">
-            <p>This is an auto-generated report from EAMCET College Prediction Platform. For official information, visit the respective college websites.</p>
-            <p style="margin-top: 10px; font-size: 10px;">Total Colleges: <strong>${filteredHighChances.length + filteredLessChances.length}</strong> | High Chances: <strong>${filteredHighChances.length}</strong> | Less Chances: <strong>${filteredLessChances.length}</strong></p>
-          </div>
+
+<p style="margin-top:8px;">
+Predictions are based on previous year's cutoff ranks.
+Actual allotment depends on official counselling and seat availability.
+</p>
+
+</div>
         </body>
       </html>
     `;
@@ -385,7 +398,7 @@ export default function CollegeResultsTable({ colleges, filter, onClose, aboveRa
 
     const opt = {
       margin: [10, 10, 10, 10],
-      filename: `College_Predictions_${name.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`,
+      filename: `BECULTS_EAMCET${name.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`,
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true },
       jsPDF: { orientation: "landscape", unit: "mm", format: "a4" },

@@ -96,6 +96,7 @@ export default function HeroSection() {
 
             <button
               type="button"
+              onClick={() => window.location.href = 'https://becults-colleges-review.vercel.app/'}
               className={`${buttonBase} bg-white border-2 border-black text-black hover:bg-slate-50`}
             >
               <ReviewIcon />
