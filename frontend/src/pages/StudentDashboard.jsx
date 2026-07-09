@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import TestCard from "../components/TestCard";
 import PredictCollegeModal from "../components/PredictCollegeModal";
 import CollegeResultsTable from "../components/CollegeResultsTable";
+import PerformanceCard from "../components/PerformanceCard";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../lib/api";
 
@@ -10,6 +11,7 @@ export default function StudentDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [tests, setTests] = useState([]);
+  const [performanceData, setPerformanceData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showPredictModal, setShowPredictModal] = useState(false);
   const [collegeResults, setCollegeResults] = useState(null);
@@ -22,16 +24,30 @@ export default function StudentDashboard() {
       if (!user?.id) {
         console.log("No user, skipping data fetch");
         setTests([]);
+        setPerformanceData([]);
         setLoading(false);
         return;
       }
 
       const testsResponse = await api.get("/student/tests", { params: { userId: user.id } });
       setTests(testsResponse.data);
+
+      // Fetch performance details for attempted tests
+      try {
+        const performanceResponse = await api.get("/student/performance", { 
+          params: { userId: user.id } 
+        });
+        setPerformanceData(performanceResponse.data);
+      } catch (error) {
+        console.log("No performance data yet:", error);
+        setPerformanceData([]);
+      }
+
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       setTests([]);
+      setPerformanceData([]);
       setLoading(false);
     }
   };
@@ -101,6 +117,27 @@ export default function StudentDashboard() {
             </div>
           )}
         </div>
+        {/* performance */}
+        <div className="mt-8 rounded-2xl bg-white p-5 shadow-sm">
+          <h2 className="mb-4 text-xl font-semibold text-slate-900">Performance</h2>
+          {performanceData.length === 0 ? (
+            <p className="text-sm text-slate-600">No attempted tests yet. Start a test to see your performance.</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {performanceData.map((performance) => (
+                <PerformanceCard 
+                  key={`${performance.test_id}-${performance.attempt_id}`}
+                  item={performance} 
+                  onView={(item) => {
+                    console.log("Viewing performance details:", item);
+                    // You can add navigation to detailed results page here if needed
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
       </div>
 
       {/* Modals */}
@@ -123,6 +160,7 @@ export default function StudentDashboard() {
           }}
         />
       )}
+
     </div>
   );
 }
