@@ -86,4 +86,55 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
+router.post("/verify-email", async (req, res, next) => {
+  try {
+    const email = String(req.body?.email || "").trim().toLowerCase();
+    const role = String(req.body?.role || "").trim().toLowerCase();
+
+    console.log("Verify email request:", { email, role });
+
+    if (!email) {
+      throw new ApiError(400, "Email is required");
+    }
+
+    if (!role) {
+      throw new ApiError(400, "Role is required");
+    }
+
+    // Check if user exists with the given email
+    const { data, error } = await supabase
+      .from("users")
+      .select("id,email,role")
+      .eq("email", email)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Supabase error:", error);
+      throw error;
+    }
+
+    if (!data) {
+      console.log("User not found for email:", email);
+      throw new ApiError(404, "User not found");
+    }
+
+    console.log("User found:", data);
+
+    // Verify role matches (optional, you can remove this if you want to allow any role login)
+    if (data.role !== role) {
+      console.log(`Role mismatch. Expected: ${role}, Got: ${data.role}`);
+      throw new ApiError(403, `This email is registered as ${data.role}, not ${role}`);
+    }
+
+    console.log("Login successful for:", data.email);
+    res.json({ 
+      message: "Email verified successfully",
+      user: data 
+    });
+  } catch (error) {
+    console.error("Verify email error:", error);
+    next(error);
+  }
+});
+
 export default router;

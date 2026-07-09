@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [role, setRole] = useState('student');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -17,13 +16,45 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await login(email, password, role);
-      if (role === 'admin') {
+      // Check if email exists in DB with the selected role
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+      console.log('Login attempt with email:', email, 'role:', role);
+      console.log('API URL:', apiUrl);
+      
+      const response = await fetch(`${apiUrl}/auth/verify-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), role }),
+      });
+
+      console.log('Backend response status:', response.status);
+      const data = await response.json();
+      console.log('Backend response data:', data);
+
+      if (!response.ok) {
+        const errorMsg = data.message || 'User not found';
+        console.error('Login error:', errorMsg);
+        setError(errorMsg);
+        return;
+      }
+
+      // Email verified, proceed with login
+      const userData = { 
+        email: data.user.email, 
+        role: data.user.role,
+        id: data.user.id 
+      };
+      console.log('User data to store:', userData);
+      login(userData);
+      
+      console.log('Navigation to:', userData.role === 'admin' ? '/admin' : '/student');
+      if (userData.role === 'admin') {
         navigate('/admin');
       } else {
         navigate('/student');
       }
     } catch (err) {
+      console.error('Login catch error:', err);
       setError(err.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
@@ -31,16 +62,20 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-[#F2F5F6] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-green-600 mb-2">BECULTS</h1>
-          <p className="text-gray-600">Welcome back! Sign in to your account</p>
+        <div className="text-center mb-10">
+          <img 
+            src='/logo.png'
+            alt="EAMCET.Cults Logo"
+            className="h-20 w-400 mx-auto object-contain mb-4"
+          />
+          {/* <p className="text-gray-600">Welcome back! Sign in to your account</p> */}
         </div>
 
         {/* Login Card */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
+        <div className="bg-[#F2F5F6] rounded-xl shadow-lg p-10">
           {error && (
             <div className="mb-4 p-4 bg-red-100 border-2 border-red-300 rounded-lg text-red-700">
               {error}
@@ -88,23 +123,8 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-500 transition"
+                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[#1A699F] transition"
                 placeholder="Enter your email"
-                required
-              />
-            </div>
-
-            {/* Password */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-green-500 transition"
-                placeholder="Enter your password"
                 required
               />
             </div>
@@ -113,7 +133,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#1A699F] text-white py-3 rounded-lg font-bold hover:bg-[#1A699F] transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Logging in...' : 'Sign In'}
             </button>
@@ -123,7 +143,7 @@ export default function LoginPage() {
           <div className="mt-6 text-center">
             <button
               onClick={() => navigate('/')}
-              className="text-green-600 hover:text-green-700 font-semibold transition"
+              className="text-[#1A699F] font-semibold transition"
             >
               ← Back to Home
             </button>
@@ -131,13 +151,7 @@ export default function LoginPage() {
         </div>
 
         {/* Demo Info */}
-        <div className="mt-8 bg-blue-50 rounded-lg p-6 border-2 border-blue-200">
-          <p className="text-sm text-gray-700 mb-2">
-            <strong>Demo Credentials (Student):</strong>
-          </p>
-          <p className="text-xs text-gray-600">Email: student@test.com</p>
-          <p className="text-xs text-gray-600">Password: password123</p>
-        </div>
+        
       </div>
     </div>
   );
