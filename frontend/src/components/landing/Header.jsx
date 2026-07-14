@@ -66,7 +66,7 @@ export default function Header() {
             </Link>
 
             <Link
-              to="#counselling"
+              to="/counselling"
               style={{
                 fontFamily: "Inter",
                 fontWeight: 600,
@@ -187,7 +187,7 @@ export default function Header() {
               Reviews
             </Link>
             <Link
-              to="#counselling"
+              to="/counselling"
               className="block px-4 py-2 text-slate-700 hover:bg-slate-100 rounded"
               onClick={() => setMobileMenuOpen(false)}
             >

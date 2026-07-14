@@ -7,6 +7,7 @@ import StudentPerformance from "./pages/StudentPerformance";
 import TestPage from "./pages/TestPage";
 import ResultPage from "./pages/ResultPage";
 import CollegeResultsPage from "./pages/CollegeResultsPage";
+import CounsellingPage from "./pages/CounsellingPage";
 import { useAuth } from "./context/AuthContext";
 
 const ProtectedRoute = ({ role, children }) => {
@@ -28,6 +29,9 @@ export default function App() {
       
       {/* College Results Page - Public */}
       <Route path="/college-results" element={<CollegeResultsPage />} />
+
+      {/* Counselling Page - Public */}
+      <Route path="/counselling" element={<CounsellingPage />} />
       
       {/* Login Page - Public */}
       <Route path="/login" element={<LoginPage />} />
