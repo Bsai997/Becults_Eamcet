@@ -8,7 +8,7 @@ export default function Header() {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50" style={{ fontFamily: "Inter" }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-20 font-extrabold">
           {/* Logo */}
           <Link to="/" className="flex-shrink-0">
             <img
@@ -24,8 +24,8 @@ export default function Header() {
               to="/"
               style={{
                 fontFamily: "Inter",
-                fontWeight: 600,
-                fontSize: "16px",
+                fontWeight: "extrabold",
+                fontSize: "18px",
                 lineHeight: "100%",
                 letterSpacing: "0%",
                 textAlign: "center",
@@ -46,8 +46,8 @@ export default function Header() {
               to="#reviews"
               style={{
                 fontFamily: "Inter",
-                fontWeight: 600,
-                fontSize: "16px",
+                fontWeight: "extrabold",
+                fontSize: "18px",
                 lineHeight: "100%",
                 letterSpacing: "0%",
                 textAlign: "center",
@@ -69,8 +69,8 @@ export default function Header() {
               to="/counselling"
               style={{
                 fontFamily: "Inter",
-                fontWeight: 600,
-                fontSize: "16px",
+                fontWeight: "extrabold",
+                fontSize: "18px",
                 lineHeight: "100%",
                 letterSpacing: "0%",
                 textAlign: "center",
@@ -92,8 +92,8 @@ export default function Header() {
               to="#doubts"
               style={{
                 fontFamily: "Inter",
-                fontWeight: 600,
-                fontSize: "16px",
+                fontWeight: "extrabold",
+                fontSize: "18px",
                 lineHeight: "100%",
                 letterSpacing: "0%",
                 textAlign: "center",
@@ -114,8 +114,8 @@ export default function Header() {
               to="#contact"
               style={{
                 fontFamily: "Inter",
-                fontWeight: 600,
-                fontSize: "16px",
+                fontWeight: "extrabold",
+                fontSize: "18px",
                 lineHeight: "100%",
                 letterSpacing: "0%",
                 textAlign: "center",
@@ -195,7 +195,7 @@ export default function Header() {
             </Link>
             <Link
               to="#doubts"
-              className="block px-4 py-2 text-slate-700 hover:bg-slate-100 rounded"
+              className="block px-4 py-2 text-slate-700 hover:bg-slate-100 rounded fontweight-extrabold"
               onClick={() => setMobileMenuOpen(false)}
             >
               Doubts

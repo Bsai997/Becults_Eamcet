@@ -60,8 +60,8 @@ export default function HeroSection() {
           </p>
         </div>
 
-        <div className="text-center mb-6">
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+        <div className="text-center mb-90">
+          <h1 className="text-4xl md:text-5xl font-extrabold  leading-tight">
             Your <span style={{ color: "#1A699F" }}>EAMCET</span> Rank
             <br />
             with <span style={{ color: "#D3540D" }}>Seniors</span>{" "}
