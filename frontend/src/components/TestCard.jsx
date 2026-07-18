@@ -8,15 +8,15 @@ const TestCard = React.memo(function TestCard({ test, onAction }) {
     test.status === "Not Started"
       ? "bg-slate-100 text-slate-700"
       : test.status === "In Progress"
-        ? "bg-indigo-100 text-indigo-700"
-        : "bg-emerald-100 text-emerald-700";
+        ? "bg-[#EEF5FA] text-indigo-700"
+        : "bg-[#EEF5FA] text-black";
 
   const actionBtn =
     actionLabel === "Start Test"
-      ? "bg-blue-600 hover:bg-blue-700"
+      ? "bg-[#1A699F] hover:bg-[#1A699F]/90"
       : actionLabel === "Resume Test"
-        ? "bg-indigo-600 hover:bg-indigo-700"
-        : "bg-emerald-600 hover:bg-emerald-700";
+        ? "bg-[#1A699F] hover:bg-[#1A699F]/90"
+        : "bg-[#1A699F] hover:bg-[#1A699F]/90";
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">

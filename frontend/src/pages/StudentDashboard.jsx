@@ -4,6 +4,7 @@ import TestCard from "../components/TestCard";
 import PredictCollegeModal from "../components/PredictCollegeModal";
 import CollegeResultsTable from "../components/CollegeResultsTable";
 import PerformanceCard from "../components/PerformanceCard";
+import Header from "../components/landing/Header";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../lib/api";
 
@@ -84,13 +85,7 @@ export default function StudentDashboard() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-green-700 to-green-900 text-white py-12">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-2">BECULTS</h1>
-          <h2 className="text-2xl font-semibold mb-3">Eamcet Mock Test Platform</h2>
-          <p className="text-lg text-green-100">Grow your career from here</p>
-        </div>
-      </div>
+      <Header />
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 py-8">
@@ -98,7 +93,7 @@ export default function StudentDashboard() {
         <div className="flex justify-end mb-8">
           <button
             onClick={() => setShowPredictModal(true)}
-            className="rounded-xl bg-green-600 px-6 py-3 text-white hover:bg-green-700 transition-colors font-semibold shadow-md hover:shadow-lg"
+            className="rounded-xl bg-[#1A699F] px-6 py-3 text-white hover:bg-[#1A699F]/90 transition-colors font-semibold shadow-md hover:shadow-lg"
           >
             🎓 Predict Colleges
           </button>

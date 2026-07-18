@@ -1,9 +1,17 @@
-import { Bold } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext"; // adjust path if your Header lives elsewhere
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true }); // replace so dashboard isn't left in history
+    setMobileMenuOpen(false);
+  };
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50" style={{ fontFamily: "Inter" }}>
@@ -134,19 +142,36 @@ export default function Header() {
             </Link>
           </nav>
 
-          {/* Login Button */}
-          <Link
-            to="/login"
-            className="hidden md:flex items-center justify-center text-white font-medium text-sm hover:opacity-90 transition-opacity mr-4"
-            style={{
-              backgroundColor: "#1A699F",
-              width: "102px",
-              height: "35px",
-              borderRadius: "16px"
-            }}
-          >
-            Login
-          </Link>
+          {/* Login / Logout Button */}
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="hidden md:flex items-center justify-center text-white font-medium text-sm hover:opacity-90 transition-opacity mr-4"
+              style={{
+                backgroundColor: "#D3540D",
+                width: "102px",
+                height: "35px",
+                borderRadius: "16px",
+                border: "none",
+                cursor: "pointer"
+              }}
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="hidden md:flex items-center justify-center text-white font-medium text-sm hover:opacity-90 transition-opacity mr-4"
+              style={{
+                backgroundColor: "#1A699F",
+                width: "102px",
+                height: "35px",
+                borderRadius: "16px"
+              }}
+            >
+              Login
+            </Link>
+          )}
 
           {/* Mobile Menu Button */}
           <button
@@ -207,18 +232,35 @@ export default function Header() {
             >
               Contact us
             </Link>
-            <Link
-              to="/login"
-              className="w-full text-white font-medium text-center mt-4 flex items-center justify-center"
-              style={{
-                backgroundColor: "#1A699F",
-                height: "35px",
-                borderRadius: "16px"
-              }}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Login
-            </Link>
+
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="w-full text-white font-medium text-center mt-4 flex items-center justify-center"
+                style={{
+                  backgroundColor: "#D3540D",
+                  height: "35px",
+                  borderRadius: "16px",
+                  border: "none",
+                  cursor: "pointer"
+                }}
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="w-full text-white font-medium text-center mt-4 flex items-center justify-center"
+                style={{
+                  backgroundColor: "#1A699F",
+                  height: "35px",
+                  borderRadius: "16px"
+                }}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Login
+              </Link>
+            )}
           </div>
         )}
       </div>
