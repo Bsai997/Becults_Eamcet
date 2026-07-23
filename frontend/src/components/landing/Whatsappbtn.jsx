@@ -11,6 +11,7 @@ export default function WhatsAppButton() {
     width: '60px',
     height: '60px',
     backgroundColor: '#25d366',
+    gradient :'linear-gradient(135deg, #25d366, #128c7e)',
     borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
