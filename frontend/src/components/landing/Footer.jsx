@@ -95,13 +95,13 @@ export default function Footer() {
           </div>
           {/* New Section for Mobile */}
           <div>
-            <h3 className="text-lg font-extrabold mb-2 text-[#1A699F]">Developed By</h3>
+            <h3 className="text-lg font-extrabold mb-2 text-[#1A699F]">Maintained By</h3>
             <p className="text-white text-sm mb-2">Bommi sai</p>
             <p className="text-gray-400 flex items-center gap-2 text-sm">
-              <Mail size={20} strokeWidth={1.5} className="text-white" />{' '}
-              <a href="mailto:bommsai23@gmail.com" className="hover:opacity-80 text-white">
+              {/* <Mail size={20} strokeWidth={1.5} className="text-white" />{' '} */}
+              {/* <a href="mailto:bommsai23@gmail.com" className="hover:opacity-80 text-white">
                  bommisai23@gmail.com
-              </a>
+              </a> */}
             </p>
           </div>
         </div>
@@ -113,17 +113,17 @@ export default function Footer() {
             <img src="/logo%20white.png" alt="EAMCET.Cults" className="h-32 w-auto max-w-full object-contain object-left" />
             <h3 className="text-xl font-extrabold text-[#1A699F]">Contact Us</h3>
             <h3 className="text-xl font-extrabold text-[#1A699F]">Follow Us</h3>
-            <h3 className="text-xl font-extrabold text-[#1A699F]">Developed By</h3>
+            <h3 className="text-xl font-extrabold text-[#1A699F]">Maintained By</h3>
           </div>
           <div className="grid grid-cols-4 gap-x-8 items-start">
             <p className="text-gray-400">
               Your one-stop platform for EAMCET preparation with mock tests, chapter-wise practice, and accurate college predictions.
             </p>
             <p className="text-gray-400 flex items-center gap-2">
-              <Mail size={20} strokeWidth={1.5} className="text-white" />{' '}
-              <a href="mailto:becults.lfib@gmail.com" className="hover:opacity-80" style={{ color: 'white' }}>
+             <Mail size={20} strokeWidth={1.5} className="text-white" />{' '} 
+               <a href="mailto:becults.lfib@gmail.com" className="hover:opacity-80" style={{ color: 'white' }}>
                 becults.lfib@gmail.com
-              </a>
+              </a> 
             </p>
             <div className="flex gap-4">
               <a
@@ -149,10 +149,10 @@ export default function Footer() {
             <div>
               <p className="text-white mb-1">Bommi sai</p>
               <p className="text-gray-400 flex items-center gap-2">
-              <Mail size={20} strokeWidth={1.5} className="text-white" />{' '}
+              {/* <Mail size={20} strokeWidth={1.5} className="text-white" />{' '}
                 <a href="mailto:bommsai23@gmail.com" className="hover:opacity-80 text-white">
                   bommsai23@gmail.com
-                </a>
+                </a> */}
               </p>
             </div>
           </div>

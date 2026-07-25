@@ -6,7 +6,7 @@ export default function WhatsAppButton() {
 
   const buttonStyle = {
     position: 'fixed',
-    bottom: '20px',
+    bottom: '50px',
     right: '20px',
     width: '60px',
     height: '60px',
@@ -16,7 +16,7 @@ export default function WhatsAppButton() {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '2px 2px 5px rgba(0,0,0,0.3)',
+    boxShadow: '2px 10px 10px #bdf2c3',
     zIndex: 1000,
     cursor: 'pointer',
     transition: 'transform 0.2s ease',
