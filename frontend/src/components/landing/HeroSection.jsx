@@ -2,6 +2,7 @@ import { ArrowRight, Target, Megaphone, MessageSquare, Star } from "lucide-react
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PredictCollegeModal from "../PredictCollegeModal";
+import { useEffect } from 'react';
 
 function ReviewIcon() {
   return (
@@ -82,8 +83,18 @@ export default function HeroSection() {
         <div className="mx-auto max-w-md md:max-w-none">
           <div className="flex flex-col md:flex-row md:items-start md:justify-center gap-3 md:gap-2">
             <div className="flex flex-col items-center md:items-start w-full md:w-auto">
+
               <button
-                onClick={() => setShowPredictModal(true)}
+                onClick={() => {
+                  if (window.gtag) {
+                    window.gtag("event", "college_predictor_click", {
+                      event_category: "Engagement",
+                      event_label: "College Predictor Button",
+                    });
+                  }
+
+                  setShowPredictModal(true);
+                }}
                 className={`${buttonBase} text-white hover:opacity-90`}
                 style={{ backgroundColor: "#D3540D" }}
               >
@@ -91,12 +102,16 @@ export default function HeroSection() {
                 <span>College Predictor</span>
                 <ArrowRight size={18} className="shrink-0" />
               </button>
+
               <InfoTooltip />
             </div>
 
             <button
               type="button"
-              onClick={() => window.location.href = 'https://becults-colleges-review.vercel.app/'}
+              onClick={() =>
+              (window.location.href =
+                "https://becults-colleges-review.vercel.app/")
+              }
               className={`${buttonBase} bg-white border-2 border-black text-black hover:bg-slate-50`}
             >
               <ReviewIcon />

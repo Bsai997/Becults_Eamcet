@@ -27,6 +27,7 @@ export default function App() {
       {/* Landing Page - Public */}
       <Route path="/" element={<LandingPage />} />
       
+      
       {/* College Results Page - Public */}
       <Route path="/college-results" element={<CollegeResultsPage />} />
 
