@@ -87,10 +87,7 @@ export default function HeroSection() {
               <button
                 onClick={() => {
                   if (window.gtag) {
-                    window.gtag("event", "college_predictor_click", {
-                      event_category: "Engagement",
-                      event_label: "College Predictor Button",
-                    });
+                    window.gtag("event", "college_predictor_click");
                   }
 
                   setShowPredictModal(true);
