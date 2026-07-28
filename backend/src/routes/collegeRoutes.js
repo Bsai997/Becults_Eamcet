@@ -2,9 +2,8 @@ import express from "express";
 import { supabase } from "../db/supabase.js";
 import { ApiError } from "../utils/ApiError.js";
 
-const router = express.Router()
+const router = express.Router();
 
- 
 router.post("/predict-colleges", async (req, res, next) => {
   try {
     const { rank, caste, gender, branch } = req.body;
@@ -48,6 +47,14 @@ router.post("/predict-colleges", async (req, res, next) => {
     const columnName = `${casteLower}_${genderLower}`;
     console.log("Query Parameters:", { rank, caste, gender, branch, columnName });
 
+    // Normalize branch payload into an uppercase array or empty array
+    let branchList = [];
+    if (Array.isArray(branch)) {
+      branchList = branch.map((b) => String(b).trim().toUpperCase()).filter(Boolean);
+    } else if (typeof branch === "string" && branch.trim()) {
+      branchList = [branch.trim().toUpperCase()];
+    }
+
     // Helper function to build base query
     const buildBaseQuery = () => {
       let query = supabase
@@ -58,10 +65,13 @@ router.post("/predict-colleges", async (req, res, next) => {
         )
         .not(columnName, "is", null);
 
-      // Optional: filter by branch
-      if (branch && branch.trim()) {
-        query = query.eq("branch_code", branch.toUpperCase());
+      // Filter by single or multiple branches
+      if (branchList.length === 1) {
+        query = query.eq("branch_code", branchList[0]);
+      } else if (branchList.length > 1) {
+        query = query.in("branch_code", branchList);
       }
+
       return query;
     };
 
@@ -71,8 +81,6 @@ router.post("/predict-colleges", async (req, res, next) => {
       .order(columnName, { ascending: true })
       .limit(80);
 
-    // console.log("Above rank query - Count:", aboveRankData?.length, "Error:", errorAbove);
-
     if (errorAbove) throw errorAbove;
 
     // Get colleges BELOW rank (cutoff < student rank) - sorted descending (highest first)
@@ -81,8 +89,6 @@ router.post("/predict-colleges", async (req, res, next) => {
       .order(columnName, { ascending: false })
       .limit(20);
 
-    // console.log("Below rank query - Count:", belowRankData?.length, "Error:", errorBelow);
-
     if (errorBelow) throw errorBelow;
 
     // If below rank has no results, get additional above rank colleges instead
@@ -90,7 +96,6 @@ router.post("/predict-colleges", async (req, res, next) => {
     let finalBelowRank = belowRankData || [];
 
     if (finalBelowRank.length === 0 && finalAboveRank.length < 60) {
-      // Get more above rank colleges if below rank is empty - rebuild query fresh
       const { data: moreAbove, error: errorMoreAbove } = await buildBaseQuery()
         .gte(columnName, rank)
         .order(columnName, { ascending: true })
@@ -98,11 +103,12 @@ router.post("/predict-colleges", async (req, res, next) => {
 
       if (!errorMoreAbove) {
         finalAboveRank = moreAbove || [];
-        console.log("Adjusted: Getting more above rank colleges. Total:", finalAboveRank.length);
       } else {
         console.log("Adjusted query error:", errorMoreAbove);
       }
-    }    const formatCollege = (college) => ({
+    }
+
+    const formatCollege = (college) => ({
       id: college.id,
       sno: college.sno,
       instcode: college.instcode,
@@ -126,7 +132,12 @@ router.post("/predict-colleges", async (req, res, next) => {
       above_rank: formattedAbove,
       below_rank: formattedBelow,
       total: allColleges.length,
-      filter: { rank, caste, gender, branch: branch || "all" },
+      filter: { 
+        rank, 
+        caste, 
+        gender, 
+        branch: branchList.length > 0 ? branchList : "all" 
+      },
     });
   } catch (error) {
     next(error);
